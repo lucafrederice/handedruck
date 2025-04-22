@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import {
   formatCurrency,
   formatDate,
@@ -41,16 +40,28 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getUserLoan, approveLoan, declineLoan } from "@/actions/borrower/loan";
 import { Payment, PaymentStatus } from "@/types/loan";
 
-export default async function LoanDetailPage({
-  params,
-}: {
+type Props = {
   params: { id: string };
-}) {
-  const id = Number.parseInt(params.id);
-  const { loan, error } = await getUserLoan(id);
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-  if (error || !loan) {
-    notFound();
+export default async function LoanPage({ params }: Props) {
+  const { loan, error } = await getUserLoan(parseInt(params.id));
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <p className="text-muted-foreground">{error}</p>
+      </div>
+    );
+  }
+
+  if (!loan) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <p className="text-muted-foreground">Loan not found</p>
+      </div>
+    );
   }
 
   const monthlyPayment = calculateMonthlyPayment(
