@@ -20,18 +20,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Mail, Phone, MapPin, CreditCard } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import DeleteBorrowerButton from "@/components/delete-borrower-button";
 import { type Loan } from "@/types";
-import { DASH_L_BORROWERS_PATH } from "../path";
-import { DASH_L_BORROWERS_ID_EDIT_PATH } from "./edit/path";
 
-export default async function BorrowerDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const id = Number.parseInt(params.id);
-  const { borrower, error } = await getBorrower(id);
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function BorrowerPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const { borrower, error } = await getBorrower(parseInt(resolvedParams.id));
 
   if (error || !borrower) {
     notFound();
@@ -43,7 +40,7 @@ export default async function BorrowerDetailPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Link href={DASH_L_BORROWERS_PATH}>
+          <Link href="/dashboard/l/borrowers">
             <Button variant="outline" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -52,15 +49,12 @@ export default async function BorrowerDetailPage({
             {borrower.firstName} {borrower.lastName}
           </h1>
         </div>
-        <div className="flex space-x-2">
-          <Link href={DASH_L_BORROWERS_ID_EDIT_PATH(id.toString())}>
-            <Button variant="outline">
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Button>
-          </Link>
-          <DeleteBorrowerButton id={id} />
-        </div>
+        <Link href={`/dashboard/l/borrowers/${resolvedParams.id}/edit`}>
+          <Button>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Borrower
+          </Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

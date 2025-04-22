@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { deleteLoan } from "@/actions/lender/loan";
 import { toast } from "sonner";
+import { DASH_L_LOANS_PATH } from "@/app/dashboard/l/loans/path";
 
 export default function DeleteLoanButton({ id }: { id: number }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -35,7 +36,7 @@ export default function DeleteLoanButton({ id }: { id: number }) {
         toast("Success", {
           description: "Loan has been deleted successfully",
         });
-        router.push("/loans");
+        router.push(DASH_L_LOANS_PATH);
       }
     } catch (err) {
       console.error(err);
@@ -60,7 +61,7 @@ export default function DeleteLoanButton({ id }: { id: number }) {
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the loan
-            and all associated payment records.
+            and all associated payments.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -7,13 +7,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DASH_L_BORROWERS_ID_PATH } from "../path";
 
-export default async function EditBorrowerPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const id = Number.parseInt(params.id);
-  const { borrower, error } = await getBorrower(id);
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function EditBorrowerPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const { borrower, error } = await getBorrower(parseInt(resolvedParams.id));
 
   if (error || !borrower) {
     notFound();
@@ -22,7 +22,7 @@ export default async function EditBorrowerPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
-        <Link href={DASH_L_BORROWERS_ID_PATH(id.toString())}>
+        <Link href={DASH_L_BORROWERS_ID_PATH(resolvedParams.id)}>
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>

@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { z } from "zod";
 import "./globals.css";
 import ErrorBoundary from "./errorBoundary";
 import Link from "next/link";
 import { Toaster } from "sonner";
 
-// Define schema for metadata
-const metadataSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-});
-
-export type MetadataType = z.infer<typeof metadataSchema>;
+export const metadata: Metadata = {
+  title: "Handedruck - Lending Management",
+  description: "Simplified lending management for lenders and borrowers",
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,12 +18,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-// Validate metadata
-export const metadata: Metadata = metadataSchema.parse({
-  title: "Handedruck - Lending Management",
-  description: "Simplified lending management for lenders and borrowers",
 });
 
 export default async function RootLayout({

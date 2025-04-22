@@ -43,9 +43,10 @@ import { DASH_L_LOANS_ID_EDIT_PATH } from "./edit/path";
 export default async function LoanDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const id = Number.parseInt(params.id);
+  const resolvedParams = await params;
+  const id = Number.parseInt(resolvedParams.id);
   const { loan, error } = await getLoan(id);
 
   if (error || !loan) {

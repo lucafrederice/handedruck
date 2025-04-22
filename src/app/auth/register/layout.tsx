@@ -1,17 +1,8 @@
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { getTempUser } from "@/actions/auth/getTempUser";
-import { z } from "zod";
 import { AUTH_MINIMAL_REGISTRATION_PATH } from "../(temp-cookie)/minimal-registration/path";
 import { AUTH_VERIFY_PATH } from "../(temp-cookie)/verify/path";
-
-// Define schema for user data
-const userSchema = z
-  .object({
-    firstName: z.string().nullable(),
-    lastName: z.string().nullable(),
-  })
-  .nullable();
 
 /**
  * Layout component for the registration page that handles user redirection based on registration status.
@@ -24,14 +15,11 @@ const userSchema = z
 export default async function Layout({ children }: { children: ReactNode }) {
   const user = await getTempUser();
 
-  // Validate user data
-  const validatedUser = userSchema.parse(user);
-
-  if (validatedUser) {
-    if (validatedUser.firstName && validatedUser.lastName) {
+  if (user) {
+    if (user.firstName && user.lastName) {
       redirect(AUTH_VERIFY_PATH);
     }
-    if (!validatedUser.firstName && !validatedUser.lastName) {
+    if (!user.firstName && !user.lastName) {
       redirect(AUTH_MINIMAL_REGISTRATION_PATH);
     }
   }

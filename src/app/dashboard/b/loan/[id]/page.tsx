@@ -40,13 +40,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getUserLoan, approveLoan, declineLoan } from "@/actions/borrower/loan";
 import { Payment, PaymentStatus } from "@/types/loan";
 
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+type PageProps = {
+  params: Promise<{ id: string }>;
 };
 
-export default async function LoanPage({ params }: Props) {
-  const { loan, error } = await getUserLoan(parseInt(params.id));
+export default async function LoanPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const { loan, error } = await getUserLoan(parseInt(resolvedParams.id));
 
   if (error) {
     return (

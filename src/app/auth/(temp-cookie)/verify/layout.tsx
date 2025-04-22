@@ -3,31 +3,6 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { AUTH_REGISTER_PATH } from "../../register/path";
 import { AUTH_MINIMAL_REGISTRATION_PATH } from "../minimal-registration/path";
-import { z } from "zod";
-
-/**
- * Schema for validating temporary user data
- * Ensures the user has both firstName and lastName when present
- */
-const tempUserSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-  })
-  .partial()
-  .refine(
-    (data) => {
-      // If any name field is present, both must be present
-      if (data.firstName || data.lastName) {
-        return data.firstName && data.lastName;
-      }
-      return true;
-    },
-    {
-      message:
-        "Both first name and last name are required when either is present",
-    }
-  );
 
 /**
  * Layout component for the OTP verification page
@@ -57,21 +32,9 @@ export default async function Layout({ children }: { children: ReactNode }) {
     redirect(AUTH_REGISTER_PATH);
   }
 
-  try {
-    // Validate user data using Zod
-    const validatedUser = tempUserSchema.parse(user);
-
-    // Check if user has complete name data
-    if (!validatedUser.firstName || !validatedUser.lastName) {
-      redirect(AUTH_MINIMAL_REGISTRATION_PATH);
-    }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      console.error("User data validation failed:", error.errors);
-      redirect(AUTH_MINIMAL_REGISTRATION_PATH);
-    }
-    // For other errors, redirect to registration
-    redirect(AUTH_REGISTER_PATH);
+  // Check if user has complete name data
+  if (!user.firstName || !user.lastName) {
+    redirect(AUTH_MINIMAL_REGISTRATION_PATH);
   }
 
   return <>{children}</>;

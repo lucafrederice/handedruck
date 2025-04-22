@@ -1,23 +1,15 @@
 import { checkAuth } from "@/actions/auth/checkAuth";
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 import { AUTH_REGISTER_PATH } from "@/app/auth/register/path";
 import { DASHBOARD_PATH } from "@/app/dashboard/path";
 import { checkUserType } from "@/actions/checkUserType";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import { Navbar } from "./components/Navbar";
 
-// Define schemas for validation
-export const authStateSchema = z.boolean();
-
-export const layoutPropsSchema = z.object({
-  children: z.custom<ReactNode>(),
-});
-
-// Infer types from schemas
-export type AuthState = z.infer<typeof authStateSchema>;
-export type LayoutProps = z.infer<typeof layoutPropsSchema>;
+interface LayoutProps {
+  children: ReactNode;
+}
 
 /**
  * Dashboard layout component that checks authentication and redirects if not authenticated.
@@ -35,7 +27,7 @@ export type LayoutProps = z.infer<typeof layoutPropsSchema>;
  */
 export default async function Layout({ children }: LayoutProps) {
   // Validate authentication state
-  const isAuthenticated = authStateSchema.parse(await checkAuth());
+  const isAuthenticated = await checkAuth();
 
   if (!isAuthenticated) redirect(AUTH_REGISTER_PATH);
 
