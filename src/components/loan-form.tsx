@@ -35,7 +35,7 @@ import { createLoan, updateLoan } from "@/actions/lender/loan";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  borrowerId: z.string().min(1, "Borrower is required"),
+  userId: z.string().min(1, "Borrower is required"),
   amount: z.string().min(1, "Amount is required"),
   interestRate: z.string().min(1, "Interest rate is required"),
   termMonths: z.string().min(1, "Term is required"),
@@ -85,7 +85,7 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      borrowerId: loan ? loan.borrowerId.toString() : "",
+      userId: loan ? loan.borrowerId.toString() : "",
       amount: loan ? loan.amount.toString() : "",
       interestRate: loan ? loan.interestRate.toString() : "",
       termMonths: loan ? loan.termMonths.toString() : "",
@@ -101,7 +101,7 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
     setIsSubmitting(true);
     try {
       const loanData = {
-        borrowerId: Number.parseInt(values.borrowerId),
+        userId: Number.parseInt(values.userId),
         amount: Number.parseFloat(values.amount),
         interestRate: Number.parseFloat(values.interestRate),
         termMonths: Number.parseInt(values.termMonths),
@@ -146,7 +146,7 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="borrowerId"
+          name="userId"
           render={({ field }: { field: FieldValues }) => (
             <FormItem>
               <FormLabel>Borrower</FormLabel>
