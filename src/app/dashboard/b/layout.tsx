@@ -1,44 +1,22 @@
 import { checkAuth } from "@/actions/auth/checkAuth";
-import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-import { AUTH_REGISTER_PATH } from "@/app/auth/register/path";
-import { getCurrentUser } from "@/actions/auth/getCurrentUser";
+import { ReactNode } from "react";
 import { Navbar } from "./components/Navbar";
 
-// Define schemas for validation
-export const authStateSchema = z.boolean();
-
-export const layoutPropsSchema = z.object({
-  children: z.custom<ReactNode>(),
-});
-
-// Infer types from schemas
-export type AuthState = z.infer<typeof authStateSchema>;
-export type LayoutProps = z.infer<typeof layoutPropsSchema>;
-
 /**
- * Dashboard layout component that checks authentication and redirects if not authenticated.
+ * Borrower dashboard layout component that checks authentication and authorization.
  *
  * @component
- * @param {LayoutProps} props - The props for the layout component
+ * @param {object} props - The props for the layout component
+ * @param {ReactNode} props.children - The child components to render
  * @returns {Promise<ReactNode>} The rendered layout
- *
- * @example
- * ```tsx
- * <Layout>
- *   <DashboardContent />
- * </Layout>
- * ```
  */
-export default async function Layout({ children }: LayoutProps) {
-  // Validate authentication state
-  const isAuthenticated = authStateSchema.parse(await checkAuth());
+export default async function Layout({ children }: { children: ReactNode }) {
+  const isAuthenticated = await checkAuth();
 
-  if (!isAuthenticated) redirect(AUTH_REGISTER_PATH);
-
-  const user = await getCurrentUser();
-  if (!user) redirect(AUTH_REGISTER_PATH);
+  if (!isAuthenticated) {
+    redirect("/auth/login");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
