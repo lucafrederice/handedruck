@@ -21,7 +21,6 @@ import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { type Loan } from "@/types";
 import { DASH_L_LOANS_NEW_PATH } from "./new/page";
-export const DASH_L_LOANS_PATH = "/dashboard/l/loans";
 
 export default async function LoansPage() {
   const { loans, error } = await getLoans();
@@ -145,3 +144,5 @@ function LoanStatusBadge({ status }: { status: string }) {
 
   return <Badge variant={variant}>{status}</Badge>;
 }
+
+export const DASH_L_LOANS_PATH = "/dashboard/l/loans";

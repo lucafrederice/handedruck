@@ -48,8 +48,6 @@ const formSchema = z.object({
   additionalInfo: z.string().optional(),
 });
 
-export const DASH_B_APPLY_PATH = "/dashboard/b/apply";
-
 export default function LoanApplicationPage() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -448,3 +446,5 @@ export default function LoanApplicationPage() {
     </div>
   );
 }
+
+export const DASH_B_APPLY_PATH = "/dashboard/b/apply";

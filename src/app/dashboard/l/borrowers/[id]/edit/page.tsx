@@ -7,9 +7,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DASH_L_BORROWERS_ID_PATH } from "../page";
 
-export const DASH_L_BORROWERS_ID_EDIT_PATH = (id: string) =>
-  `${DASH_L_BORROWERS_ID_PATH(id)}/edit`;
-
 export default async function EditBorrowerPage({
   params,
 }: {
@@ -44,3 +41,6 @@ export default async function EditBorrowerPage({
     </div>
   );
 }
+
+export const DASH_L_BORROWERS_ID_EDIT_PATH = (id: string) =>
+  `${DASH_L_BORROWERS_ID_PATH(id)}/edit`;

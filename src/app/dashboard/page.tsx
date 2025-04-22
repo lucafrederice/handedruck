@@ -14,8 +14,6 @@ import { DASH_B_PATH } from "./b/page";
 import { DotBackgroundDemo } from "@/components/dottedBg";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 
-export const DASHBOARD_PATH = "/dashboard";
-
 export default async function Page() {
   const user = await getCurrentUser();
 
@@ -110,3 +108,4 @@ export default async function Page() {
     </div>
   );
 }
+export const DASHBOARD_PATH = "/dashboard";

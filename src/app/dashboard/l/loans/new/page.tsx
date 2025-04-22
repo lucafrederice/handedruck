@@ -6,8 +6,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DASH_L_LOANS_PATH } from "../page";
 
-export const DASH_L_LOANS_NEW_PATH = "/dashboard/l/loans/new";
-
 export default async function NewLoanPage() {
   const { borrowers, error } = await getBorrowers();
 
@@ -37,3 +35,4 @@ export default async function NewLoanPage() {
     </div>
   );
 }
+export const DASH_L_LOANS_NEW_PATH = "/dashboard/l/loans/new";

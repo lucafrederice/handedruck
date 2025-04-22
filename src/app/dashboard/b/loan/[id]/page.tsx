@@ -41,8 +41,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getUserLoan, approveLoan, declineLoan } from "@/actions/borrower/loan";
 import { Payment, PaymentStatus } from "@/types/loan";
 
-export const DASH_B_LOAN_PATH = (id: string) => `/dashboard/b/loan/${id}`;
-
 export default async function LoanDetailPage({
   params,
 }: {
@@ -382,6 +380,8 @@ export default async function LoanDetailPage({
     </div>
   );
 }
+
+export const DASH_B_LOAN_PATH = (id: string) => `/dashboard/b/loan/${id}`;
 
 function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
   switch (status) {

@@ -9,8 +9,6 @@ import { getLoans } from "@/actions/lender/loan";
 import { formatCurrency } from "@/lib/utils";
 import { type Loan } from "@/types";
 
-export const DASH_L_REPORTS_PATH = "/dashboard/l/reports";
-
 export default async function ReportsPage() {
   const { loans, error } = await getLoans();
 
@@ -207,3 +205,5 @@ export default async function ReportsPage() {
     </div>
   );
 }
+
+export const DASH_L_REPORTS_PATH = "/dashboard/l/reports";

@@ -25,8 +25,6 @@ import { Plus, ArrowRight, AlertCircle } from "lucide-react";
 import { getUserLoans } from "@/actions/borrower/loan";
 import { Loan, LoanStatus } from "@/types/loan";
 
-export const DASH_B_PATH = "/dashboard/b";
-
 export default async function MyLoansPage() {
   const { loans, error } = await getUserLoans();
 
@@ -194,6 +192,8 @@ export default async function MyLoansPage() {
     </div>
   );
 }
+
+export const DASH_B_PATH = "/dashboard/b";
 
 function LoanStatusBadge({ status }: { status: LoanStatus }) {
   switch (status) {

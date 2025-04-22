@@ -8,9 +8,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DASH_L_LOANS_ID_PATH } from "../page";
 
-export const DASH_L_LOANS_ID_EDIT_PATH = (id: string) =>
-  `${DASH_L_LOANS_ID_PATH(id)}/edit`;
-
 export default async function EditLoanPage({
   params,
 }: {
@@ -50,3 +47,6 @@ export default async function EditLoanPage({
     </div>
   );
 }
+
+export const DASH_L_LOANS_ID_EDIT_PATH = (id: string) =>
+  `${DASH_L_LOANS_ID_PATH(id)}/edit`;
