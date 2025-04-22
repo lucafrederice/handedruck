@@ -381,8 +381,6 @@ export default async function LoanDetailPage({
   );
 }
 
-export const DASH_B_LOAN_PATH = (id: string) => `/dashboard/b/loan/${id}`;
-
 function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
   switch (status) {
     case "completed":

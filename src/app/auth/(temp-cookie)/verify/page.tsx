@@ -3,8 +3,6 @@ import Form from "./form";
 import { readTempIdCookie } from "@/actions/auth/cookies/tempIdCookie/readTempIdCookie";
 import { z } from "zod";
 
-export const AUTH_VERIFY_PATH = "/auth/verify";
-
 /**
  * Schema for validating the OTP code input
  */

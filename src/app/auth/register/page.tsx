@@ -1,14 +1,12 @@
 import { redirect } from "next/navigation";
-import { AUTH_MINIMAL_REGISTRATION_PATH } from "../(temp-cookie)/minimal-registration/page";
 import Form from "./form";
-import { AUTH_VERIFY_PATH } from "../(temp-cookie)/verify/page";
 import { register } from "@/actions/auth/register";
 import { authMethod, REGISTRATION_STATUS } from "@/actions/auth/constants";
-import { HANDLE_SUBMIT_FN } from "@/constants";
 import { sendOTP } from "@/actions/auth/sendOTP";
 import { z } from "zod";
-
-export const AUTH_REGISTER_PATH = "/auth/register";
+import { AUTH_VERIFY_PATH } from "../(temp-cookie)/verify/path";
+import { AUTH_MINIMAL_REGISTRATION_PATH } from "../(temp-cookie)/minimal-registration/path";
+import { HANDLE_SUBMIT_FN } from "@/contants";
 
 // Define schemas for validation
 const formDataSchema = z.object({

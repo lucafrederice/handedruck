@@ -37,8 +37,8 @@ import {
 import DeleteLoanButton from "@/components/delete-loan-button";
 import PaymentForm from "@/components/payment-form";
 import { type Payment } from "@/types";
-import { DASH_L_LOANS_PATH } from "../page";
-import { DASH_L_LOANS_ID_EDIT_PATH } from "./edit/page";
+import { DASH_L_LOANS_PATH } from "../path";
+import { DASH_L_LOANS_ID_EDIT_PATH } from "./edit/path";
 
 export default async function LoanDetailPage({
   params,
@@ -317,5 +317,3 @@ export default async function LoanDetailPage({
     </div>
   );
 }
-
-export const DASH_L_LOANS_ID_PATH = (id: string) => `/dashboard/l/loans/${id}`;

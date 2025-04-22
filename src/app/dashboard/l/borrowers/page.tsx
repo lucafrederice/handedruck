@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/table";
 import { Plus, Mail, Phone, CreditCard } from "lucide-react";
 import { type Borrower } from "@/types";
-import { DASH_L_BORROWERS_NEW_PATH } from "./new/page";
-import { DASH_L_BORROWERS_ID_PATH } from "./[id]/page";
+import { DASH_L_BORROWERS_NEW_PATH } from "./new/path";
+import { DASH_L_BORROWERS_ID_PATH } from "./[id]/path";
 
 export default async function BorrowersPage() {
   const { borrowers, error } = await getBorrowers();
@@ -134,5 +134,3 @@ export default async function BorrowersPage() {
     </div>
   );
 }
-
-export const DASH_L_BORROWERS_PATH = "/dashboard/l/borrowers";

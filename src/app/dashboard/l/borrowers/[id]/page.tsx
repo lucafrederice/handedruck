@@ -22,8 +22,8 @@ import { ArrowLeft, Edit, Mail, Phone, MapPin, CreditCard } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import DeleteBorrowerButton from "@/components/delete-borrower-button";
 import { type Loan } from "@/types";
-import { DASH_L_BORROWERS_PATH } from "../page";
-import { DASH_L_BORROWERS_ID_EDIT_PATH } from "./edit/page";
+import { DASH_L_BORROWERS_PATH } from "../path";
+import { DASH_L_BORROWERS_ID_EDIT_PATH } from "./edit/path";
 
 export default async function BorrowerDetailPage({
   params,
@@ -263,6 +263,3 @@ export default async function BorrowerDetailPage({
     </div>
   );
 }
-
-export const DASH_L_BORROWERS_ID_PATH = (id: string) =>
-  `${DASH_L_BORROWERS_PATH}/${id}`;

@@ -9,10 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DASH_L_PATH } from "./l/page";
-import { DASH_B_PATH } from "./b/page";
+import { DASH_L_PATH } from "./l/path";
 import { DotBackgroundDemo } from "@/components/dottedBg";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
+import { DASH_B_PATH } from "./b/path";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -108,4 +108,3 @@ export default async function Page() {
     </div>
   );
 }
-export const DASHBOARD_PATH = "/dashboard";

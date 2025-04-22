@@ -446,5 +446,3 @@ export default function LoanApplicationPage() {
     </div>
   );
 }
-
-export const DASH_B_APPLY_PATH = "/dashboard/b/apply";

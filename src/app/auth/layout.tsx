@@ -1,8 +1,7 @@
 import { checkAuth } from "@/actions/auth/checkAuth";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { DASHBOARD_PATH } from "../dashboard/page";
-
+import { DASHBOARD_PATH } from "../dashboard/path";
 /**
  * Authentication layout component that checks authentication and redirects to dashboard if authenticated.
  * This layout is used for authentication-related pages like login and register.

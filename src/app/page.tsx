@@ -5,8 +5,6 @@ import { ArrowRight } from "lucide-react";
 import { DotBackgroundDemo } from "../components/dottedBg";
 import { UserCard } from "../components/UserCard";
 
-export const HOME_PATH = "/";
-
 export default async function Page() {
   const user = await getCurrentUser();
 

@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { AUTH_MINIMAL_REGISTRATION_PATH } from "../(temp-cookie)/minimal-registration/page";
 import { getTempUser } from "@/actions/auth/getTempUser";
-import { AUTH_VERIFY_PATH } from "../(temp-cookie)/verify/page";
 import { z } from "zod";
+import { AUTH_MINIMAL_REGISTRATION_PATH } from "../(temp-cookie)/minimal-registration/path";
+import { AUTH_VERIFY_PATH } from "../(temp-cookie)/verify/path";
 
 // Define schema for user data
 const userSchema = z

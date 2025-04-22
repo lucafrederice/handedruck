@@ -193,8 +193,6 @@ export default async function MyLoansPage() {
   );
 }
 
-export const DASH_B_PATH = "/dashboard/b";
-
 function LoanStatusBadge({ status }: { status: LoanStatus }) {
   switch (status) {
     case "active":

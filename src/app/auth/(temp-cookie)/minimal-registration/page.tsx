@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation";
-import { AUTH_VERIFY_PATH } from "../verify/page";
 import { completeMinimalRegistration } from "@/actions/auth/completeMinimalRegistration";
 import Form from "./form";
 import { sendOTP } from "@/actions/auth/sendOTP";
 import { z } from "zod";
-
-export const AUTH_MINIMAL_REGISTRATION_PATH = "/auth/minimal-registration";
+import { AUTH_VERIFY_PATH } from "../verify/path";
 
 /**
  * Schema for validating the form data

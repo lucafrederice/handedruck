@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import BorrowerForm from "@/components/borrower-form";
-import { DASH_L_BORROWERS_PATH } from "../page";
-
+import { DASH_L_BORROWERS_PATH } from "../path";
 export default function NewBorrowerPage() {
   return (
     <div className="space-y-6">
@@ -28,5 +27,3 @@ export default function NewBorrowerPage() {
     </div>
   );
 }
-
-export const DASH_L_BORROWERS_NEW_PATH = `/dashboard/l/borrowers/new`;

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { DASH_L_LOANS_PATH } from "../page";
+import { DASH_L_LOANS_PATH } from "../path";
 
 export default async function NewLoanPage() {
   const { borrowers, error } = await getBorrowers();
@@ -35,4 +35,3 @@ export default async function NewLoanPage() {
     </div>
   );
 }
-export const DASH_L_LOANS_NEW_PATH = "/dashboard/l/loans/new";

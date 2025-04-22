@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { DASH_L_BORROWERS_ID_PATH } from "../page";
+import { DASH_L_BORROWERS_ID_PATH } from "../path";
 
 export default async function EditBorrowerPage({
   params,
@@ -41,6 +41,3 @@ export default async function EditBorrowerPage({
     </div>
   );
 }
-
-export const DASH_L_BORROWERS_ID_EDIT_PATH = (id: string) =>
-  `${DASH_L_BORROWERS_ID_PATH(id)}/edit`;

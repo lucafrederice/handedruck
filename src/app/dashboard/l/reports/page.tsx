@@ -205,5 +205,3 @@ export default async function ReportsPage() {
     </div>
   );
 }
-
-export const DASH_L_REPORTS_PATH = "/dashboard/l/reports";

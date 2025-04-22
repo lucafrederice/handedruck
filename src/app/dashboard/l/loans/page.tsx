@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { type Loan } from "@/types";
-import { DASH_L_LOANS_NEW_PATH } from "./new/page";
+import { DASH_L_LOANS_NEW_PATH } from "./new/path";
 
 export default async function LoansPage() {
   const { loans, error } = await getLoans();
@@ -144,5 +144,3 @@ function LoanStatusBadge({ status }: { status: string }) {
 
   return <Badge variant={variant}>{status}</Badge>;
 }
-
-export const DASH_L_LOANS_PATH = "/dashboard/l/loans";

@@ -2,7 +2,7 @@ import { checkAuth } from "@/actions/auth/checkAuth";
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { AUTH_REGISTER_PATH } from "@/app/auth/register/page";
+import { AUTH_REGISTER_PATH } from "@/app/auth/register/path";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import { Navbar } from "./components/Navbar";
 
