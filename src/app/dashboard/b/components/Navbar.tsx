@@ -6,9 +6,9 @@ import { FileText, Home, LogOut } from "lucide-react";
 import cn from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/actions/auth/signOut";
-import { DASHBOARD_PATH } from "../../page";
-import { DASH_B_PATH } from "../page";
-import { DASH_B_APPLY_PATH } from "../apply/page";
+import { DASHBOARD_PATH } from "../../path";
+import { DASH_B_PATH } from "../path";
+import { DASH_B_APPLY_PATH } from "../apply/path";
 const routes = [
   {
     href: DASH_B_PATH,

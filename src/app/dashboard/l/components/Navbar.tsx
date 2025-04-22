@@ -6,11 +6,11 @@ import { Home, Users, FileText, Landmark, LogOut } from "lucide-react";
 import cn from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/actions/auth/signOut";
-import { DASHBOARD_PATH } from "../../page";
-import { DASH_L_BORROWERS_PATH } from "../borrowers/page";
-import { DASH_L_PATH } from "../page";
-import { DASH_L_LOANS_PATH } from "../loans/page";
-import { DASH_L_REPORTS_PATH } from "../reports/page";
+import { DASHBOARD_PATH } from "../../path";
+import { DASH_L_BORROWERS_PATH } from "../borrowers/path";
+import { DASH_L_PATH } from "../path";
+import { DASH_L_LOANS_PATH } from "../loans/path";
+import { DASH_L_REPORTS_PATH } from "../reports/path";
 const routes = [
   {
     href: DASH_L_PATH,
