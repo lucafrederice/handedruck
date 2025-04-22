@@ -1,8 +1,8 @@
 import { getTempUser } from "@/actions/auth/getTempUser";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { AUTH_REGISTER_PATH } from "../../register/page";
-import { AUTH_MINIMAL_REGISTRATION_PATH } from "../minimal-registration/page";
+import { AUTH_REGISTER_PATH } from "../../register/path";
+import { AUTH_MINIMAL_REGISTRATION_PATH } from "../minimal-registration/path";
 import { z } from "zod";
 
 /**

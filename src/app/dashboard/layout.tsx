@@ -1,6 +1,6 @@
 import { checkAuth } from "@/actions/auth/checkAuth";
 import { ReactNode } from "react";
-import { AUTH_REGISTER_PATH } from "../auth/register/page";
+import { AUTH_REGISTER_PATH } from "../auth/register/path";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
