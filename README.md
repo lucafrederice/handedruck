@@ -19,6 +19,7 @@ Final Note: I really loved to create this project and played a lot with differen
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 19" src="https://github.com/user-attachments/assets/29280b35-7d46-410e-a9a6-679c21a6353b" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 29" src="https://github.com/user-attachments/assets/bb4768e9-6d6f-46dd-9e17-bdaeff09dc73" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 42" src="https://github.com/user-attachments/assets/b80c3e47-ec6d-437f-a920-04b929552c04" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 09 53" src="https://github.com/user-attachments/assets/3f87a332-ae7d-495b-ac2e-8e6a4ea6d3d6" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 02" src="https://github.com/user-attachments/assets/52eda160-359d-4e10-ba46-41f2abce8e54" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 20" src="https://github.com/user-attachments/assets/f3a9f3b4-aa71-4d20-a098-8a70c27eeb39" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 26" src="https://github.com/user-attachments/assets/0936b7c0-b61d-4780-a454-7766187c675a" />
