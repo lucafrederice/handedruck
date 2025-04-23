@@ -27,6 +27,13 @@ Final Note: I really loved to create this project and played a lot with differen
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 59" src="https://github.com/user-attachments/assets/6adafd2d-0495-4226-b352-af25d79f6bee" />
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 08 06" src="https://github.com/user-attachments/assets/3c498129-1eab-4e4e-bc10-7e6412b0676e" />
 
+![image](https://github.com/user-attachments/assets/0d96c494-0e74-4425-915f-28078b08fec7)
+![image](https://github.com/user-attachments/assets/bdea744f-c1b0-4e23-8c22-f1f2df702862)
+![image](https://github.com/user-attachments/assets/6bffef4d-e714-4023-a729-a235fc3ff649)
+![image](https://github.com/user-attachments/assets/0c36e1dd-372a-4645-89e0-f102f6863caa)
+![image](https://github.com/user-attachments/assets/ae294aba-a7e0-43c4-aa1d-11bd7ab7cecd)
+
+
 
 # Handedruck - Loan Management System
 
