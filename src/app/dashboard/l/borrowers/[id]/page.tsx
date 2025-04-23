@@ -23,6 +23,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Decimal } from "@prisma/client/runtime/library";
 import { DASH_L_BORROWERS_PATH } from "../path";
 import { DASH_L_BORROWERS_ID_EDIT_PATH } from "./edit/path";
+import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 
 type Loan = {
@@ -257,7 +258,7 @@ export default async function BorrowerPage({ params }: PageProps) {
                         : "Not started"}
                     </TableCell>
                     <TableCell>
-                      <Link href={`/loans/${loan.id}`}>
+                      <Link href={DASH_L_LOANS_ID_PATH(loan.id.toString())}>
                         <Button variant="outline" size="sm">
                           View
                         </Button>

@@ -33,7 +33,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { createLoan, updateLoan } from "@/actions/lender/loan";
 import { toast } from "sonner";
-
+import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
+import { DASH_L_LOANS_PATH } from "@/app/dashboard/l/loans/path";
 const formSchema = z.object({
   userId: z.string().min(1, "Borrower is required"),
   amount: z.string().min(1, "Amount is required"),
@@ -112,10 +113,15 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
   const onSubmit = async (values: FormSchema) => {
     setIsSubmitting(true);
     try {
+      // Parse the formatted values
+      const amount = parseFloat(values.amount.replace(/[^0-9.-]+/g, ""));
+      const interestRate =
+        parseFloat(values.interestRate.replace(/[^0-9.-]+/g, "")) / 100; // Convert percentage to decimal
+
       const loanData = {
         userId: Number.parseInt(values.userId),
-        amount: Number.parseFloat(values.amount),
-        interestRate: Number.parseFloat(values.interestRate),
+        amount,
+        interestRate,
         termMonths: Number.parseInt(values.termMonths),
         status: values.status,
         startDate: values.startDate || undefined,
@@ -141,7 +147,11 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
             ? "Loan has been updated successfully"
             : "Loan has been created successfully",
         });
-        router.push(isEditing ? `/loans/${loan?.id}` : "/loans");
+        router.push(
+          isEditing
+            ? DASH_L_LOANS_ID_PATH(loan?.id.toString())
+            : DASH_L_LOANS_PATH
+        );
       }
     } catch (err) {
       console.error(err);
@@ -433,7 +443,7 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/loans")}
+            onClick={() => router.push(DASH_L_LOANS_PATH)}
           >
             Cancel
           </Button>

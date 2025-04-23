@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
 import { LoanStatus } from "../../types/loan";
 import { Decimal } from "@prisma/client/runtime/library";
-
+import { sendLoanNotification } from "@/resend/sendLoanNotification";
+import { formatCurrency } from "@/lib/loan-utils";
+import { DASH_L_LOANS_PATH } from "@/app/dashboard/l/loans/path";
+import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
 type Payment = {
@@ -113,8 +116,8 @@ export async function getLoan(id: number) {
 // Create a new loan
 export async function createLoan(data: {
   userId: number;
-  amount: number;
-  interestRate: number;
+  amount: number | string;
+  interestRate: number | string;
   termMonths: number;
   status?: LoanStatus;
   startDate?: Date;
@@ -123,11 +126,36 @@ export async function createLoan(data: {
   notes?: string;
 }) {
   try {
+    // Parse and validate numeric values
+    const amount =
+      typeof data.amount === "string"
+        ? parseFloat(data.amount.replace(/[^0-9.-]+/g, ""))
+        : data.amount;
+
+    const interestRate =
+      typeof data.interestRate === "string"
+        ? parseFloat(data.interestRate.replace(/[^0-9.-]+/g, ""))
+        : data.interestRate;
+
+    if (isNaN(amount) || amount <= 0) {
+      return { error: "Invalid loan amount" };
+    }
+    if (isNaN(interestRate) || interestRate <= 0) {
+      return { error: "Invalid interest rate" };
+    }
+    if (isNaN(data.termMonths) || data.termMonths <= 0) {
+      return { error: "Invalid term months" };
+    }
+
     const loan = await prisma.loan.create({
       data: {
-        userId: data.userId,
-        amount: data.amount,
-        interestRate: data.interestRate,
+        user: {
+          connect: {
+            id: data.userId,
+          },
+        },
+        amount: new Decimal(amount),
+        interestRate: new Decimal(interestRate),
         termMonths: data.termMonths,
         status: data.status || "pending",
         startDate: data.startDate,
@@ -140,6 +168,19 @@ export async function createLoan(data: {
       },
     });
 
+    // Send notification email to the borrower
+    if (loan.user.email) {
+      await sendLoanNotification({
+        firstName: loan.user.firstName || "",
+        lastName: loan.user.lastName || "",
+        email: loan.user.email,
+        loanAmount: formatCurrency(Number(loan.amount)),
+        interestRate: Number(loan.interestRate).toString(),
+        termMonths: loan.termMonths,
+        purpose: loan.purpose,
+      });
+    }
+
     // Convert Decimal values to numbers
     const formattedLoan = {
       ...loan,
@@ -147,7 +188,7 @@ export async function createLoan(data: {
       interestRate: Number(loan.interestRate),
     };
 
-    revalidatePath("/loans");
+    revalidatePath(DASH_L_LOANS_PATH);
     return { loan: formattedLoan };
   } catch (error) {
     console.error("Failed to create loan:", error);
@@ -186,8 +227,8 @@ export async function updateLoan(
       interestRate: Number(loan.interestRate),
     };
 
-    revalidatePath(`/loans/${id}`);
-    revalidatePath("/loans");
+    revalidatePath(DASH_L_LOANS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_LOANS_PATH);
     return { loan: formattedLoan };
   } catch (error) {
     console.error(`Failed to update loan ${id}:`, error);
@@ -212,7 +253,7 @@ export async function deleteLoan(id: number) {
       interestRate: Number(loan.interestRate),
     };
 
-    revalidatePath("/loans");
+    revalidatePath(DASH_L_LOANS_PATH);
     return { success: true, loan: formattedLoan };
   } catch (error) {
     console.error(`Failed to delete loan ${id}:`, error);

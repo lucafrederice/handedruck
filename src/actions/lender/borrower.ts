@@ -86,7 +86,7 @@ export async function createBorrower(data: {
       loginUrl,
     });
 
-    revalidatePath("/borrowers");
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { borrower };
   } catch (error) {
     console.error("Failed to create borrower:", error);

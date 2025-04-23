@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import type { Decimal } from "@prisma/client/runtime/library";
-
+import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
+import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
 interface PrismaLoan {
   id: number;
   userId: number;
@@ -159,7 +160,7 @@ export async function createLoanApplication(data: {
       })),
     };
 
-    revalidatePath("/dashboard/b");
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { loan: formattedLoan };
   } catch (error) {
     console.error("Failed to create loan application:", error);
@@ -201,8 +202,8 @@ export async function approveLoan(id: number) {
       })),
     };
 
-    revalidatePath(`/dashboard/b/loan/${id}`);
-    revalidatePath("/dashboard/b");
+    revalidatePath(DASH_L_BORROWERS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { loan: formattedLoan };
   } catch (error) {
     console.error(`Failed to approve loan ${id}:`, error);
@@ -242,8 +243,8 @@ export async function declineLoan(id: number) {
       })),
     };
 
-    revalidatePath(`/dashboard/b/loan/${id}`);
-    revalidatePath("/dashboard/b");
+    revalidatePath(DASH_L_BORROWERS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { loan: formattedLoan };
   } catch (error) {
     console.error(`Failed to decline loan ${id}:`, error);

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
-
+import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
 // Get all payments for a loan
@@ -42,7 +42,7 @@ export async function createPayment(data: {
       },
     });
 
-    revalidatePath(`/loans/${data.loanId}`);
+    revalidatePath(DASH_L_LOANS_ID_PATH(data.loanId.toString()));
     return { payment };
   } catch (error) {
     console.error("Failed to create payment:", error);
@@ -66,7 +66,7 @@ export async function updatePayment(
       data: data,
     });
 
-    revalidatePath(`/loans/${payment.loanId}`);
+    revalidatePath(DASH_L_LOANS_ID_PATH(payment.loanId.toString()));
     return { payment };
   } catch (error) {
     console.error(`Failed to update payment ${id}:`, error);
@@ -81,7 +81,7 @@ export async function deletePayment(id: number) {
       where: { id },
     });
 
-    revalidatePath(`/loans/${payment.loanId}`);
+    revalidatePath(DASH_L_LOANS_ID_PATH(payment.loanId.toString()));
     return { success: true, payment };
   } catch (error) {
     console.error(`Failed to delete payment ${id}:`, error);
