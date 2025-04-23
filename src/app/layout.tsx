@@ -28,34 +28,37 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ErrorBoundary
           fallback={<div>Something went wrong. Please try again.</div>}
         >
-          {children}
-          <footer className="w-full py-6 border-t border-gray-100 mx-auto max-w-7xl">
-            <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Handedruck
-              </p>
-              <div className="flex items-center gap-4">
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  Terms
-                </Link>
-                <div className="h-1 w-1 rounded-full bg-gray-200"></div>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  Privacy
-                </Link>
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-1">{children}</div>
+            <footer className="w-full py-6 border-t border-gray-100 mx-auto max-w-7xl">
+              <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
+                <p className="text-sm text-muted-foreground">
+                  © {new Date().getFullYear()} Handedruck
+                </p>
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    Terms
+                  </Link>
+                  <div className="h-1 w-1 rounded-full bg-gray-200"></div>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    Privacy
+                  </Link>
+                </div>
               </div>
-            </div>
-          </footer>
+            </footer>
+          </div>
+
           <Toaster />
         </ErrorBoundary>
       </body>
