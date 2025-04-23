@@ -3,7 +3,7 @@ import React from "react";
 
 export function DotBackgroundDemo({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex h-[30rem] w-full items-center justify-center bg-white dark:bg-black">
+    <div className="relative flex w-full items-center justify-center bg-white dark:bg-black">
       <div
         className={cn(
           "absolute inset-0",
