@@ -11,6 +11,21 @@ Final Note: I really loved to create this project and played a lot with differen
 
 # Demo available on https://handedruck.vercel.app/
 
+# Screenshots
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 03 29" src="https://github.com/user-attachments/assets/8e77adf4-3cfb-4a33-b34d-288637065d2c" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 03 58" src="https://github.com/user-attachments/assets/c151c287-cbc5-4d57-8bb4-11783793ec04" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 04 24" src="https://github.com/user-attachments/assets/c74edb05-c3ea-46c5-828f-b8e9c0c66341" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 04 45" src="https://github.com/user-attachments/assets/dd38f560-d298-4257-9d73-521aea89f953" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 19" src="https://github.com/user-attachments/assets/29280b35-7d46-410e-a9a6-679c21a6353b" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 29" src="https://github.com/user-attachments/assets/bb4768e9-6d6f-46dd-9e17-bdaeff09dc73" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 05 42" src="https://github.com/user-attachments/assets/b80c3e47-ec6d-437f-a920-04b929552c04" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 02" src="https://github.com/user-attachments/assets/52eda160-359d-4e10-ba46-41f2abce8e54" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 20" src="https://github.com/user-attachments/assets/f3a9f3b4-aa71-4d20-a098-8a70c27eeb39" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 26" src="https://github.com/user-attachments/assets/0936b7c0-b61d-4780-a454-7766187c675a" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 46" src="https://github.com/user-attachments/assets/13026ead-98b5-4442-8b3a-483cc53b3eaf" />
+<img width="1512" alt="Captura de Tela 2025-04-23 às 12 06 59" src="https://github.com/user-attachments/assets/6adafd2d-0495-4226-b352-af25d79f6bee" />
+
+
 # Handedruck - Loan Management System
 
 A modern, full-stack loan management system built with Next.js 15, TypeScript, and Prisma. The application provides a comprehensive platform for managing loans, borrowers, and payments with separate interfaces for lenders and borrowers.
