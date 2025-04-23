@@ -27,7 +27,7 @@ export function Navbar() {
 
   return (
     <header className="flex items-center justify-between w-full">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-semibold max-md:text-base ">
         <Link href={DASHBOARD_PATH}>🤝 Handedruck</Link>{" "}
         <span className="text-muted-foreground">|</span>{" "}
         <small className="text-muted-foreground">Borrower Dashboard</small>

@@ -89,7 +89,7 @@ export default async function MyLoansPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 max-md:flex-col max-md:items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Loans</h1>
           <p className="text-muted-foreground">

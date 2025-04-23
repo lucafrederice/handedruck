@@ -6,6 +6,12 @@ import { DASHBOARD_PATH } from "@/app/dashboard/path";
 import { checkUserType } from "@/actions/checkUserType";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import { Navbar } from "./components/Navbar";
+import { FloatingDock } from "@/components/ui/floating-dock";
+import { Home, Users, FileText, Landmark } from "lucide-react";
+import { DASH_L_PATH } from "./path";
+import { DASH_L_BORROWERS_PATH } from "./borrowers/path";
+import { DASH_L_LOANS_PATH } from "./loans/path";
+import { DASH_L_REPORTS_PATH } from "./reports/path";
 
 interface LayoutProps {
   children: ReactNode;
@@ -52,6 +58,32 @@ export default async function Layout({ children }: LayoutProps) {
         </div>
       </header>
       <main className="flex-1 p-6 max-w-7xl mx-auto w-full">{children}</main>
+      <div className="fixed bottom-4 left-0 right-0 flex justify-center md:hidden">
+        <FloatingDock
+          items={[
+            {
+              title: "Dashboard",
+              icon: <Home className="h-4 w-4" />,
+              href: DASH_L_PATH,
+            },
+            {
+              title: "Borrowers",
+              icon: <Users className="h-4 w-4" />,
+              href: DASH_L_BORROWERS_PATH,
+            },
+            {
+              title: "Loans",
+              icon: <Landmark className="h-4 w-4" />,
+              href: DASH_L_LOANS_PATH,
+            },
+            {
+              title: "Reports",
+              icon: <FileText className="h-4 w-4" />,
+              href: DASH_L_REPORTS_PATH,
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }
