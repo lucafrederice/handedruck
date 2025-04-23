@@ -51,7 +51,7 @@ export async function sendBorrowerInvitation(
     validateResendConfig();
 
     const { error } = await resend.emails.send({
-      from: "Handedruck <onboarding@resend.dev>",
+      from: "Handedruck <verify@verify.prolizz.com>",
       to: [email],
       subject: "Welcome to Handedruck - Your Borrower Account",
       react: BorrowerInvitationTemplate({

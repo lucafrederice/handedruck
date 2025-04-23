@@ -73,7 +73,7 @@ export async function sendResendEmailOTP(
     validateResendConfig();
 
     const { error } = await resend.emails.send({
-      from: "Handedruck <onboarding@resend.dev>",
+      from: "Handedruck <verify@verify.prolizz.com>",
       to: [email],
       subject: "Hello world",
       react: EmailTemplate({ otp: code }) as React.ReactElement,

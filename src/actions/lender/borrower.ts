@@ -5,6 +5,7 @@ import { prisma } from "@/db/prisma";
 import { sendBorrowerInvitation } from "@/resend/sendBorrowerInvitation";
 import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
 import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
+import { AUTH_REGISTER_PATH } from "@/app/auth/register/path";
 // Get all borrowers (users with loans)
 export async function getBorrowers() {
   try {
@@ -75,7 +76,9 @@ export async function createBorrower(data: {
     });
 
     // Send invitation email
-    const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const loginUrl = new URL(AUTH_REGISTER_PATH, baseUrl).toString();
+
     await sendBorrowerInvitation({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -83,7 +86,7 @@ export async function createBorrower(data: {
       loginUrl,
     });
 
-    revalidatePath(DASH_L_BORROWERS_PATH);
+    revalidatePath("/borrowers");
     return { borrower };
   } catch (error) {
     console.error("Failed to create borrower:", error);
