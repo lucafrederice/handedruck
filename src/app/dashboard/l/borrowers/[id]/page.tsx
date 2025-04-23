@@ -21,7 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Mail, Phone, MapPin, CreditCard } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Decimal } from "@prisma/client/runtime/library";
-
+import { DASH_L_BORROWERS_PATH } from "../path";
+import { DASH_L_BORROWERS_ID_EDIT_PATH } from "./edit/path";
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 
 type Loan = {
@@ -59,7 +60,7 @@ export default async function BorrowerPage({ params }: PageProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Link href="/dashboard/l/borrowers">
+          <Link href={DASH_L_BORROWERS_PATH}>
             <Button variant="outline" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -68,7 +69,7 @@ export default async function BorrowerPage({ params }: PageProps) {
             {borrower.firstName} {borrower.lastName}
           </h1>
         </div>
-        <Link href={`/dashboard/l/borrowers/${resolvedParams.id}/edit`}>
+        <Link href={DASH_L_BORROWERS_ID_EDIT_PATH(resolvedParams.id)}>
           <Button>
             <Edit className="mr-2 h-4 w-4" />
             Edit Borrower

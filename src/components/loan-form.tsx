@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type FieldValues } from "react-hook-form";
@@ -97,6 +97,18 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
     },
   });
 
+  // Watch for changes in startDate and termMonths
+  const startDate = form.watch("startDate");
+  const termMonths = form.watch("termMonths");
+
+  useEffect(() => {
+    if (startDate && termMonths) {
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + parseInt(termMonths));
+      form.setValue("endDate", endDate);
+    }
+  }, [startDate, termMonths, form]);
+
   const onSubmit = async (values: FormSchema) => {
     setIsSubmitting(true);
     try {
@@ -182,9 +194,38 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
+                    type="text"
+                    placeholder="$0.00"
+                    onChange={(e) => {
+                      // Remove non-numeric characters except decimal point
+                      const value = e.target.value.replace(/[^0-9.]/g, "");
+                      // Ensure only one decimal point
+                      const parts = value.split(".");
+                      if (parts.length > 2) {
+                        parts.pop();
+                      }
+                      const formattedValue = parts.join(".");
+                      field.onChange(formattedValue);
+                    }}
+                    onBlur={(e) => {
+                      // Format as currency on blur
+                      const value = e.target.value;
+                      if (value) {
+                        const numericValue = parseFloat(value);
+                        if (!isNaN(numericValue)) {
+                          const formattedValue = new Intl.NumberFormat(
+                            "en-US",
+                            {
+                              style: "currency",
+                              currency: "USD",
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }
+                          ).format(numericValue);
+                          field.onChange(formattedValue);
+                        }
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -201,9 +242,37 @@ export default function LoanForm({ borrowers, loan }: LoanFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
+                    type="text"
+                    placeholder="0.00%"
+                    onChange={(e) => {
+                      // Remove non-numeric characters except decimal point
+                      const value = e.target.value.replace(/[^0-9.]/g, "");
+                      // Ensure only one decimal point
+                      const parts = value.split(".");
+                      if (parts.length > 2) {
+                        parts.pop();
+                      }
+                      const formattedValue = parts.join(".");
+                      field.onChange(formattedValue);
+                    }}
+                    onBlur={(e) => {
+                      // Format as percentage on blur
+                      const value = e.target.value;
+                      if (value) {
+                        const numericValue = parseFloat(value);
+                        if (!isNaN(numericValue)) {
+                          const formattedValue = new Intl.NumberFormat(
+                            "en-US",
+                            {
+                              style: "percent",
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }
+                          ).format(numericValue / 100);
+                          field.onChange(formattedValue);
+                        }
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getLoans } from "@/actions/lender/loan";
+import { getBorrowers } from "@/actions/lender/borrower";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/loan-utils";
-import { DASH_L_LOANS_PATH } from "./path";
+import { DASH_L_LOANS_NEW_PATH } from "./new/path";
 
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
@@ -54,6 +55,8 @@ type Loan = {
 
 export default async function LoansPage() {
   const { loans, error } = await getLoans();
+  const { borrowers } = await getBorrowers();
+  const hasBorrowers = borrowers && borrowers.length > 0;
 
   return (
     <div className="space-y-6">
@@ -62,8 +65,11 @@ export default async function LoansPage() {
           <h1 className="text-3xl font-bold tracking-tight">Loans</h1>
           <p className="text-muted-foreground">Manage and track all loans</p>
         </div>
-        <Link href={`${DASH_L_LOANS_PATH}/new`}>
-          <Button>
+        <Link href={hasBorrowers ? DASH_L_LOANS_NEW_PATH : ""}>
+          <Button
+            disabled={!hasBorrowers}
+            title={!hasBorrowers ? "No borrowers available" : ""}
+          >
             <Plus className="mr-2 h-4 w-4" />
             New Loan
           </Button>

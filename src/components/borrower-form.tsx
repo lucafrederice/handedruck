@@ -19,12 +19,13 @@ import {
 } from "@/components/ui/form";
 import { createBorrower, updateBorrower } from "@/actions/lender/borrower";
 import { toast } from "sonner";
-
+import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
+import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
 // Define the form schema
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
   phone: z.string().optional(),
   address: z.string().optional(),
   creditScore: z.string().optional(),
@@ -97,7 +98,11 @@ export default function BorrowerForm({ borrower }: BorrowerFormProps) {
             ? "Borrower has been updated successfully"
             : "Borrower has been created successfully",
         });
-        router.push(isEditing ? `/borrowers/${borrower?.id}` : "/borrowers");
+        router.push(
+          isEditing
+            ? DASH_L_BORROWERS_ID_PATH(borrower?.id?.toString())
+            : DASH_L_BORROWERS_PATH
+        );
       }
     } catch (err) {
       console.error(err);
@@ -147,12 +152,15 @@ export default function BorrowerForm({ borrower }: BorrowerFormProps) {
           name="email"
           render={({ field }: { field: FieldValues }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                Email <span className="text-destructive">*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   placeholder="john.doe@example.com"
+                  required
                 />
               </FormControl>
               <FormMessage />
@@ -221,7 +229,7 @@ export default function BorrowerForm({ borrower }: BorrowerFormProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/borrowers")}
+            onClick={() => router.push(DASH_L_BORROWERS_PATH)}
           >
             Cancel
           </Button>

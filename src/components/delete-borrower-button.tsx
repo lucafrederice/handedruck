@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { deleteBorrower } from "@/actions/lender/borrower";
 import { toast } from "sonner";
-
+import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
 export default function DeleteBorrowerButton({ id }: { id: number }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function DeleteBorrowerButton({ id }: { id: number }) {
         toast("Success", {
           description: "Borrower has been deleted successfully",
         });
-        router.push("/borrowers");
+        router.push(DASH_L_BORROWERS_PATH);
       }
     } catch (err) {
       console.error(err);

@@ -12,6 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Decimal } from "@prisma/client/runtime/library";
+import { DASH_L_BORROWERS_NEW_PATH } from "./new/path";
+import { DASH_L_BORROWERS_ID_PATH } from "./[id]/path";
 
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 
@@ -69,7 +71,7 @@ export default async function BorrowersPage() {
           <h1 className="text-3xl font-bold tracking-tight">Borrowers</h1>
           <p className="text-muted-foreground">Manage and view all borrowers</p>
         </div>
-        <Link href="/dashboard/l/borrowers/new">
+        <Link href={DASH_L_BORROWERS_NEW_PATH}>
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             Add Borrower
@@ -120,7 +122,9 @@ export default async function BorrowersPage() {
                     </TableCell>
                     <TableCell>{borrower.loans.length}</TableCell>
                     <TableCell>
-                      <Link href={`/dashboard/l/borrowers/${borrower.id}`}>
+                      <Link
+                        href={DASH_L_BORROWERS_ID_PATH(borrower.id.toString())}
+                      >
                         <Button variant="outline" size="sm">
                           View
                         </Button>
@@ -130,7 +134,10 @@ export default async function BorrowersPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center">
+                  <TableCell
+                    colSpan={7}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     No borrowers found
                   </TableCell>
                 </TableRow>

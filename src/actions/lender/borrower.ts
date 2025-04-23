@@ -2,16 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
-
+import { sendBorrowerInvitation } from "@/resend/sendBorrowerInvitation";
+import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
+import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
 // Get all borrowers (users with loans)
 export async function getBorrowers() {
   try {
     const borrowers = await prisma.user.findMany({
-      where: {
-        loans: {
-          some: {},
-        },
-      },
+      // where: {
+      //   loans: {
+      //     some: {},
+      //   },
+      // },
       include: {
         loans: true,
       },
@@ -72,7 +74,16 @@ export async function createBorrower(data: {
       },
     });
 
-    revalidatePath("/borrowers");
+    // Send invitation email
+    const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`;
+    await sendBorrowerInvitation({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      loginUrl,
+    });
+
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { borrower };
   } catch (error) {
     console.error("Failed to create borrower:", error);
@@ -98,8 +109,8 @@ export async function updateBorrower(
       data,
     });
 
-    revalidatePath(`/borrowers/${id}`);
-    revalidatePath("/borrowers");
+    revalidatePath(DASH_L_BORROWERS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { borrower };
   } catch (error) {
     console.error(`Failed to update borrower ${id}:`, error);
@@ -114,7 +125,7 @@ export async function deleteBorrower(id: number) {
       where: { id },
     });
 
-    revalidatePath("/borrowers");
+    revalidatePath(DASH_L_BORROWERS_PATH);
     return { success: true, borrower };
   } catch (error) {
     console.error(`Failed to delete borrower ${id}:`, error);
