@@ -31,38 +31,22 @@ export default async function Page() {
   async function handleSubmit(formData: FormData) {
     "use server";
 
-    try {
-      // Validate the code using Zod
-      const code = codeSchema.parse(formData.get("code")?.toString());
+    // Validate the code using Zod
+    const code = codeSchema.parse(formData.get("code")?.toString());
 
-      // Verify the OTP
-      const res = await verifyOTP({ code });
+    // Verify the OTP
+    const res = await verifyOTP({ code });
 
-      // Validate and return the response
-      if (res.success) {
-        return responseSchema.parse({
-          success: true,
-          message: res.message || "Verification successful",
-        });
-      } else {
-        return responseSchema.parse({
-          success: false,
-          error: res.message || "Verification failed",
-        });
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        // Handle validation errors
-        return responseSchema.parse({
-          success: false,
-          error: error.errors[0]?.message || "Invalid input",
-        });
-      }
-
-      // Handle other errors
+    // Validate and return the response
+    if (res.success) {
+      return responseSchema.parse({
+        success: true,
+        message: res.message || "Verification successful",
+      });
+    } else {
       return responseSchema.parse({
         success: false,
-        error: "An error occurred during verification",
+        error: res.message || "Verification failed",
       });
     }
   }

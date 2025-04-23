@@ -52,43 +52,29 @@ export default async function Page() {
   async function handleSubmit(formData: FormData) {
     "use server";
 
-    try {
-      // Validate form data using Zod
-      const validatedData = formDataSchema.parse({
-        firstName: formData.get("firstName")?.toString(),
-        lastName: formData.get("lastName")?.toString(),
-      });
+    // Validate form data using Zod
+    const validatedData = formDataSchema.parse({
+      firstName: formData.get("firstName")?.toString(),
+      lastName: formData.get("lastName")?.toString(),
+    });
 
-      // Complete registration
-      const res = await completeMinimalRegistration({
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-      });
+    // Complete registration
+    const res = await completeMinimalRegistration({
+      firstName: validatedData.firstName,
+      lastName: validatedData.lastName,
+    });
 
-      if (res.success) {
-        await sendOTP();
-        return redirect(AUTH_VERIFY_PATH);
+    if (res.success) {
+      const sendOTPResponse = await sendOTP();
+      if (sendOTPResponse.success) {
+        redirect(AUTH_VERIFY_PATH);
       }
-
-      return responseSchema.parse({
-        success: false,
-        error: "An unknown error happened.",
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return responseSchema.parse({
-          success: false,
-          error: error.errors[0]?.message || "Invalid input",
-        });
-      }
-
-      console.error(error);
-
-      return responseSchema.parse({
-        success: false,
-        error: "An error occurred during registration",
-      });
     }
+
+    return responseSchema.parse({
+      success: false,
+      error: "An unknown error happened.",
+    });
   }
 
   return <Form handleSubmit={handleSubmit} />;

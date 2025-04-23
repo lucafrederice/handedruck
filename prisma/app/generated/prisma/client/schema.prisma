@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  firstName   String?   @map("first_name")
+  lastName    String?   @map("last_name")
+  fiscalId    String?   @unique @map("fiscal_id")
+  country     String?
+  address     String?
+  birthday    DateTime? @db.Date
+  email       String?   @unique
+  phone       String?   @unique @db.VarChar(20)
+  creditScore Int?      @map("credit_score")
+  isAgent     Boolean   @default(true) @map("is_agent")
+  isAdmin     Boolean   @default(false) @map("is_admin")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+  isDeleted   Boolean   @default(false) @map("is_deleted")
+
+  // Relations
+  otps              Otp[]
+  sessions          Session[]
+  errorLogs         ErrorLog[] @relation("userErrorLogs")
+  resolvedErrorLogs ErrorLog[] @relation("userResolvedErrorLogs")
+  loans             Loan[]
+
+  @@map("users")
+}
+
+model Otp {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  method     String
+  identifier String
+  code       String   @db.VarChar(6)
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id])
+  session Session?
+
+  @@map("otps")
+}
+
+model Session {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  otpId             Int?     @unique @map("otp_id")
+  jwtToken          String   @map("jwt_token")
+  expiresAt         DateTime @map("expires_at")
+  userAgent         String?  @map("user_agent")
+  ipAddress         String?  @map("ip_address") @db.VarChar(45)
+  deviceInfo        String?  @map("device_info")
+  forceDeactivation Boolean  @default(false) @map("force_deactivation")
+  lastActive        DateTime @default(now()) @map("last_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @map("updated_at")
+
+  // Relations
+  user      User       @relation(fields: [userId], references: [id])
+  otp       Otp?       @relation(fields: [otpId], references: [id])
+  errorLogs ErrorLog[]
+
+  @@map("sessions")
+}
+
+model ErrorLog {
+  id         Int       @id @default(autoincrement())
+  message    String
+  name       String?   @db.VarChar(255)
+  stack      String?
+  code       String?   @db.VarChar(100)
+  type       String?   @db.VarChar(100)
+  severity   String    @default("error") @db.VarChar(50)
+  userId     Int?      @map("user_id")
+  sessionId  Int?      @map("session_id")
+  url        String?
+  method     String?   @db.VarChar(10)
+  route      String?   @db.VarChar(255)
+  userAgent  String?   @map("user_agent")
+  ipAddress  String?   @map("ip_address") @db.VarChar(45)
+  metadata   Json?
+  isResolved Boolean   @default(false) @map("is_resolved")
+  resolvedAt DateTime? @map("resolved_at")
+  resolvedBy Int?      @map("resolved_by")
+  resolution String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @map("updated_at")
+
+  // Relations
+  user           User?    @relation("userErrorLogs", fields: [userId], references: [id])
+  resolvedByUser User?    @relation("userResolvedErrorLogs", fields: [resolvedBy], references: [id])
+  session        Session? @relation(fields: [sessionId], references: [id])
+
+  @@map("error_logs")
+}
+
+// Enums
+enum LoanStatus {
+  pending
+  active
+  paid
+  defaulted
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  completed
+  failed
+  cancelled
+}
+
+// Models
+model Loan {
+  id                 Int        @id @default(autoincrement())
+  userId             Int        @map("user_id")
+  amount             Decimal    @db.Decimal(12, 2)
+  interestRate       Decimal    @map("interest_rate") @db.Decimal(5, 2)
+  termMonths         Int        @map("term_months")
+  status             LoanStatus @default(pending)
+  approvedByUs       Boolean    @default(false) @map("approved_by_us")
+  approvedByCustomer Boolean    @default(false) @map("approved_by_customer")
+  startDate          DateTime?  @map("start_date")
+  endDate            DateTime?  @map("end_date")
+  purpose            String?
+  notes              String?
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+
+  @@map("loans")
+}
+
+model Payment {
+  id          Int           @id @default(autoincrement())
+  loanId      Int           @map("loan_id")
+  amount      Decimal       @db.Decimal(12, 2)
+  paymentDate DateTime      @map("payment_date")
+  status      PaymentStatus @default(pending)
+  notes       String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  loan Loan @relation(fields: [loanId], references: [id])
+
+  @@map("payments")
+}

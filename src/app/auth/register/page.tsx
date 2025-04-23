@@ -47,78 +47,64 @@ export default async function Page() {
   const handleSubmit: HANDLE_SUBMIT_FN = async (formData) => {
     "use server";
 
-    try {
-      // Validate form data
-      const validatedData = formDataSchema.parse({
-        email: formData.get("email")?.toString(),
-        phone: formData.get("phone")?.toString(),
-        method: formData.get("method")?.toString(),
-      });
+    const validatedData = formDataSchema.parse({
+      email: formData.get("email")?.toString(),
+      phone: formData.get("phone")?.toString(),
+      method: formData.get("method")?.toString(),
+    });
 
-      let res;
+    let res;
 
-      if (validatedData.method === authMethod.email) {
-        if (!validatedData.email) {
-          return handleSubmitResponseSchema.parse({
-            success: false,
-            message: "Email is required.",
-          });
-        }
-
-        res = await register({
-          identifier: validatedData.email,
-          method: validatedData.method,
-        });
-      }
-
-      if (validatedData.method === authMethod.phone) {
-        if (!validatedData.phone) {
-          return handleSubmitResponseSchema.parse({
-            success: false,
-            message: "Phone is required.",
-          });
-        }
-
-        res = await register({
-          identifier: validatedData.phone,
-          method: validatedData.method,
-        });
-      }
-
-      // Validate registration response
-      const validatedResponse = registrationResponseSchema.parse(res);
-
-      if (
-        validatedResponse.status ===
-        REGISTRATION_STATUS.MINIMAL_REGISTRATION_COMPLETED
-      ) {
-        await sendOTP();
-        return redirect(AUTH_VERIFY_PATH);
-      }
-
-      if (
-        validatedResponse.status ===
-        REGISTRATION_STATUS.MINIMAL_REGISTRATION_INCOMPLETED
-      ) {
-        return redirect(AUTH_MINIMAL_REGISTRATION_PATH);
-      }
-
-      return handleSubmitResponseSchema.parse({
-        success: false,
-        message: validatedResponse.message || "",
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
+    if (validatedData.method === authMethod.email) {
+      if (!validatedData.email) {
         return handleSubmitResponseSchema.parse({
           success: false,
-          message: error.errors[0].message,
+          message: "Email is required.",
         });
       }
-      return handleSubmitResponseSchema.parse({
-        success: false,
-        message: "An unexpected error occurred.",
+
+      res = await register({
+        identifier: validatedData.email,
+        method: validatedData.method,
       });
     }
+
+    if (validatedData.method === authMethod.phone) {
+      if (!validatedData.phone) {
+        return handleSubmitResponseSchema.parse({
+          success: false,
+          message: "Phone is required.",
+        });
+      }
+
+      res = await register({
+        identifier: validatedData.phone,
+        method: validatedData.method,
+      });
+    }
+
+    // Validate registration response
+    const validatedResponse = registrationResponseSchema.parse(res);
+
+    if (
+      validatedResponse.status ===
+      REGISTRATION_STATUS.MINIMAL_REGISTRATION_COMPLETED
+    ) {
+      await sendOTP();
+      redirect(AUTH_VERIFY_PATH);
+    }
+
+    if (
+      validatedResponse.status ===
+      REGISTRATION_STATUS.MINIMAL_REGISTRATION_INCOMPLETED
+    ) {
+      redirect(AUTH_MINIMAL_REGISTRATION_PATH);
+    }
+
+    return handleSubmitResponseSchema.parse({
+      success: false,
+      message: validatedResponse.message || "",
+    });
   };
 
   return (
