@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { DotBackgroundDemo } from "../components/dottedBg";
 import { UserCard } from "../components/UserCard";
+import { AUTH_REGISTER_PATH } from "./auth/register/path";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -93,7 +94,10 @@ export default async function Page() {
                     size="lg"
                     className="mt-4 group relative overflow-hidden"
                   >
-                    <Link href="/staff-login" className="flex items-center">
+                    <Link
+                      href={AUTH_REGISTER_PATH}
+                      className="flex items-center"
+                    >
                       Staff Access
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
@@ -137,7 +141,10 @@ export default async function Page() {
                     size="lg"
                     className="mt-4 group relative overflow-hidden"
                   >
-                    <Link href="/customer-login" className="flex items-center">
+                    <Link
+                      href={AUTH_REGISTER_PATH}
+                      className="flex items-center"
+                    >
                       Customer Access
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
