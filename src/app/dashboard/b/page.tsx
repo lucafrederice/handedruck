@@ -74,8 +74,7 @@ export default async function MyLoansPage() {
 
   // Separate pending loans that need approval
   const pendingApproval = loans.filter(
-    (loan: Loan) =>
-      loan.status === "pending" && loan.approvedByUs && !loan.approvedByCustomer
+    (loan: Loan) => loan.status === "pending" && !loan.approvedByCustomer
   );
 
   // Active and other loans

@@ -14,6 +14,7 @@ import {
 import { Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/loan-utils";
 import { DASH_L_LOANS_NEW_PATH } from "./new/path";
+import { DASH_L_LOANS_ID_PATH } from "./[id]/path";
 
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
@@ -95,6 +96,7 @@ export default async function LoansPage() {
                   <TableHead>Status</TableHead>
                   <TableHead>Start Date</TableHead>
                   <TableHead>End Date</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -131,6 +133,13 @@ export default async function LoansPage() {
                       </TableCell>
                       <TableCell>
                         {loan.endDate ? formatDate(loan.endDate) : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        <Link href={DASH_L_LOANS_ID_PATH(loan.id.toString())}>
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))

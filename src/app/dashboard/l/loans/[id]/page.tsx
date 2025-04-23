@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getLoan } from "@/actions/lender/loan";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,6 +18,9 @@ import {
   calculateRemainingBalance,
   calculatePaymentProgress,
 } from "@/lib/loan-utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PaymentForm from "@/components/payment-form";
+import { Badge } from "@/components/ui/badge";
 
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
@@ -59,14 +68,19 @@ export default async function LoanPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-4">
         <Link href={DASH_L_LOANS_PATH}>
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Loan #{loan.id}</h1>
+          <div className="flex items-center">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Loan #{loan.id}
+            </h1>
+            <Badge className="ml-2">{loan.status}</Badge>
+          </div>
           <p className="text-muted-foreground">View and manage loan details</p>
         </div>
       </div>
@@ -203,41 +217,62 @@ export default async function LoanPage({ params }: PageProps) {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {payments.length > 0 ? (
-            <div className="space-y-4">
-              {payments.map((payment) => (
-                <div
-                  key={payment.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium">Payment #{payment.id}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(payment.paymentDate)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">
-                      {formatCurrency(payment.amount)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {payment.status.charAt(0).toUpperCase() +
-                        payment.status.slice(1)}
-                    </p>
-                  </div>
+      <Tabs defaultValue="payments">
+        <TabsList>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="add-payment">Add Payment</TabsTrigger>
+        </TabsList>
+        <TabsContent value="payments" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {payments.length > 0 ? (
+                <div className="space-y-4">
+                  {payments.map((payment) => (
+                    <div
+                      key={payment.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
+                      <div>
+                        <p className="font-medium">Payment #{payment.id}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatDate(payment.paymentDate)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">
+                          {formatCurrency(payment.amount)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {payment.status.charAt(0).toUpperCase() +
+                            payment.status.slice(1)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">No payments recorded</p>
-          )}
-        </CardContent>
-      </Card>
+              ) : (
+                <p className="text-muted-foreground">No payments recorded</p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="add-payment">
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Payment</CardTitle>
+              <CardDescription>
+                Record a new payment for this loan
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PaymentForm loanId={loan.id} suggestedAmount={monthlyPayment} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

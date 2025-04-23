@@ -42,8 +42,14 @@ export async function createPayment(data: {
       },
     });
 
+    // Convert Decimal to number before returning
+    const paymentWithNumberAmount = {
+      ...payment,
+      amount: Number(payment.amount),
+    };
+
     revalidatePath(DASH_L_LOANS_ID_PATH(data.loanId.toString()));
-    return { payment };
+    return { payment: paymentWithNumberAmount };
   } catch (error) {
     console.error("Failed to create payment:", error);
     return { error: "Failed to create payment" };
