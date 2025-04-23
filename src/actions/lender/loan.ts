@@ -137,9 +137,15 @@ export async function createLoan(data: {
         ? parseFloat(data.interestRate.replace(/[^0-9.-]+/g, ""))
         : data.interestRate;
 
+    // Validate amount is within database limits (precision 12, scale 2)
     if (isNaN(amount) || amount <= 0) {
       return { error: "Invalid loan amount" };
     }
+    if (amount >= 10000000000) {
+      // 10^10 (max value for precision 12, scale 2)
+      return { error: "Loan amount exceeds maximum allowed value" };
+    }
+
     if (isNaN(interestRate) || interestRate <= 0) {
       return { error: "Invalid interest rate" };
     }
@@ -188,7 +194,7 @@ export async function createLoan(data: {
       interestRate: Number(loan.interestRate),
     };
 
-    revalidatePath(DASH_L_LOANS_PATH);
+    revalidatePath("/loans");
     return { loan: formattedLoan };
   } catch (error) {
     console.error("Failed to create loan:", error);
