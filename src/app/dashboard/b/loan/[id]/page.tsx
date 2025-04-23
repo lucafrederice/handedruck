@@ -89,8 +89,7 @@ export default async function LoanPage({ params }: PageProps) {
   const remainingBalance = calculateRemainingBalance(loan, loan.payments);
   const paymentProgress = calculatePaymentProgress(loan, loan.payments);
 
-  const needsApproval =
-    loan.status === "pending" && loan.approvedByUs && !loan.approvedByCustomer;
+  const needsApproval = loan.status === "pending" && !loan.approvedByCustomer;
 
   return (
     <div className="space-y-6">
