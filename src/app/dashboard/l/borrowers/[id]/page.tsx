@@ -20,7 +20,26 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Mail, Phone, MapPin, CreditCard } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { type Loan } from "@/types";
+import { Decimal } from "@prisma/client/runtime/library";
+
+type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
+
+type Loan = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
+  amount: Decimal;
+  interestRate: Decimal;
+  termMonths: number;
+  status: LoanStatus;
+  approvedByUs: boolean;
+  approvedByCustomer: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  purpose: string | null;
+  notes: string | null;
+};
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -151,7 +170,7 @@ export default async function BorrowerPage({ params }: PageProps) {
                       ? formatCurrency(
                           loans.reduce(
                             (sum: number, loan: Loan) =>
-                              sum + Number(loan.amount),
+                              sum + loan.amount.toNumber(),
                             0
                           )
                         )
@@ -173,7 +192,7 @@ export default async function BorrowerPage({ params }: PageProps) {
                             )
                             .reduce(
                               (sum: number, loan: Loan) =>
-                                sum + Number(loan.amount),
+                                sum + loan.amount.toNumber(),
                               0
                             )
                         )
@@ -211,8 +230,10 @@ export default async function BorrowerPage({ params }: PageProps) {
                 loans.map((loan: Loan) => (
                   <TableRow key={loan.id}>
                     <TableCell>{loan.id}</TableCell>
-                    <TableCell>{formatCurrency(Number(loan.amount))}</TableCell>
-                    <TableCell>{loan.interestRate}%</TableCell>
+                    <TableCell>
+                      {formatCurrency(loan.amount.toNumber())}
+                    </TableCell>
+                    <TableCell>{loan.interestRate.toNumber()}%</TableCell>
                     <TableCell>{loan.termMonths} months</TableCell>
                     <TableCell>
                       <Badge

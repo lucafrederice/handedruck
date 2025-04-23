@@ -21,17 +21,26 @@ export type Loan = {
   approvedByCustomer: boolean;
   startDate: Date | null;
   endDate: Date | null;
-  purpose?: string;
-  notes?: string;
+  purpose: string | null;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
-  user?: {
+  user: {
     id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
   };
-  payments?: Payment[];
+  payments: {
+    id: number;
+    loanId: number;
+    amount: number;
+    paymentDate: Date;
+    status: "pending" | "completed" | "failed" | "cancelled";
+    notes: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 
 export type Payment = {

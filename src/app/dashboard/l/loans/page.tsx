@@ -1,13 +1,7 @@
 import Link from "next/link";
 import { getLoans } from "@/actions/lender/loan";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -16,11 +10,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
-import { type Loan } from "@/types";
-import { DASH_L_LOANS_NEW_PATH } from "./new/path";
+import { formatCurrency, formatDate } from "@/lib/loan-utils";
+import { DASH_L_LOANS_PATH } from "./path";
+
+type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
+type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
+
+type Payment = {
+  id: number;
+  loanId: number;
+  amount: number;
+  paymentDate: Date;
+  status: PaymentStatus;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type Loan = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
+  amount: number;
+  interestRate: number;
+  termMonths: number;
+  status: LoanStatus;
+  approvedByUs: boolean;
+  approvedByCustomer: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  purpose: string | null;
+  notes: string | null;
+  payments: Payment[];
+  user: {
+    id: number;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+  };
+};
 
 export default async function LoansPage() {
   const { loans, error } = await getLoans();
@@ -30,11 +60,9 @@ export default async function LoansPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Loans</h1>
-          <p className="text-muted-foreground">
-            Manage and track all your active loans
-          </p>
+          <p className="text-muted-foreground">Manage and track all loans</p>
         </div>
-        <Link href={DASH_L_LOANS_NEW_PATH}>
+        <Link href={`${DASH_L_LOANS_PATH}/new`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             New Loan
@@ -42,19 +70,14 @@ export default async function LoansPage() {
         </Link>
       </div>
 
-      {error ? (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-center text-destructive">Error: {error}</div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>All Loans</CardTitle>
-            <CardDescription>A list of all loans in the system</CardDescription>
-          </CardHeader>
-          <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Loans</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error ? (
+            <div className="text-destructive">{error}</div>
+          ) : (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -65,7 +88,7 @@ export default async function LoansPage() {
                   <TableHead>Term</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Start Date</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>End Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -74,73 +97,52 @@ export default async function LoansPage() {
                     <TableRow key={loan.id}>
                       <TableCell>{loan.id}</TableCell>
                       <TableCell>
-                        {loan.user
-                          ? `${loan.user.firstName} ${loan.user.lastName}`
-                          : "Unknown"}
+                        {loan.user.firstName} {loan.user.lastName}
                       </TableCell>
-                      <TableCell>
-                        {formatCurrency(Number(loan.amount))}
-                      </TableCell>
+                      <TableCell>{formatCurrency(loan.amount)}</TableCell>
                       <TableCell>{loan.interestRate}%</TableCell>
                       <TableCell>{loan.termMonths} months</TableCell>
                       <TableCell>
-                        <LoanStatusBadge status={loan.status} />
+                        <span
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                            loan.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : loan.status === "paid"
+                                ? "bg-blue-100 text-blue-800"
+                                : loan.status === "defaulted"
+                                  ? "bg-red-100 text-red-800"
+                                  : loan.status === "cancelled"
+                                    ? "bg-gray-100 text-gray-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {loan.status.charAt(0).toUpperCase() +
+                            loan.status.slice(1)}
+                        </span>
                       </TableCell>
                       <TableCell>
-                        {loan.startDate
-                          ? new Date(loan.startDate).toLocaleDateString()
-                          : "Not started"}
+                        {loan.startDate ? formatDate(loan.startDate) : "N/A"}
                       </TableCell>
                       <TableCell>
-                        <Link href={`/loans/${loan.id}`}>
-                          <Button variant="outline" size="sm">
-                            View
-                          </Button>
-                        </Link>
+                        {loan.endDate ? formatDate(loan.endDate) : "N/A"}
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center">
+                    <TableCell
+                      colSpan={8}
+                      className="h-24 text-center text-muted-foreground"
+                    >
                       No loans found
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
-}
-
-function LoanStatusBadge({ status }: { status: string }) {
-  let variant:
-    | "default"
-    | "secondary"
-    | "destructive"
-    | "outline"
-    | null
-    | undefined;
-
-  switch (status) {
-    case "active":
-      variant = "default";
-      break;
-    case "paid":
-      variant = "secondary";
-      break;
-    case "defaulted":
-      variant = "destructive";
-      break;
-    case "pending":
-      variant = "outline";
-      break;
-    default:
-      variant = "outline";
-  }
-
-  return <Badge variant={variant}>{status}</Badge>;
 }

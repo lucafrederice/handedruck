@@ -38,7 +38,19 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getUserLoan, approveLoan, declineLoan } from "@/actions/borrower/loan";
-import { Payment, PaymentStatus } from "@/types/loan";
+
+type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
+
+type Payment = {
+  id: number;
+  loanId: number;
+  amount: number;
+  paymentDate: Date;
+  status: PaymentStatus;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -265,7 +277,13 @@ export default async function LoanPage({ params }: PageProps) {
                   <p className="text-xs text-muted-foreground mt-2">
                     {
                       loan.payments.filter(
-                        (p: Payment) => p.status === "completed"
+                        (p: {
+                          status:
+                            | "pending"
+                            | "completed"
+                            | "failed"
+                            | "cancelled";
+                        }) => p.status === "completed"
                       ).length
                     }{" "}
                     of {loan.termMonths} payments completed

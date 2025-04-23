@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { getCurrentUser } from "./auth/getCurrentUser";
 import { z } from "zod";
 import { prisma } from "../db/prisma";
+import type { JsonValue } from "@prisma/client/runtime/library";
 
 /**
  * Schema for validating error severity levels
@@ -26,35 +27,16 @@ const httpMethodSchema = z.enum([
 
 /**
  * Schema for validating error metadata
+ * This matches Prisma's JsonValue type
  */
-const errorMetadataSchema = z.record(
+const errorMetadataSchema: z.ZodType<JsonValue> = z.lazy(() =>
   z.union([
     z.string(),
     z.number(),
     z.boolean(),
     z.null(),
-    z.undefined(),
-    z.array(
-      z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])
-    ),
-    z.record(
-      z.union([
-        z.string(),
-        z.number(),
-        z.boolean(),
-        z.null(),
-        z.undefined(),
-        z.array(
-          z.union([
-            z.string(),
-            z.number(),
-            z.boolean(),
-            z.null(),
-            z.undefined(),
-          ])
-        ),
-      ])
-    ),
+    z.array(errorMetadataSchema),
+    z.record(errorMetadataSchema),
   ])
 );
 
@@ -198,7 +180,7 @@ export async function logError(
         route: validatedError.route,
         userAgent,
         ipAddress,
-        metadata: validatedError.metadata,
+        // metadata,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -253,10 +235,7 @@ export async function resolveError(
 
     return errorResolutionResponseSchema.parse({ success: true });
   } catch (error) {
-    console.error(
-      "Failed to resolve error:",
-      error instanceof Error ? error.message : String(error)
-    );
+    console.error("Failed to resolve error:", error);
     return errorResolutionResponseSchema.parse({ success: false });
   }
 }
@@ -264,61 +243,36 @@ export async function resolveError(
 /**
  * Gets a list of errors with optional filtering
  *
- * @param {ErrorFilterOptions} options - Filter options
- * @returns {Promise<Array<{ id: number; message: string; severity: string; isResolved: boolean; createdAt: Date }>>} List of errors
- * @throws {z.ZodError} If the options validation fails
+ * @param {ErrorFilterOptions} options - Optional filter options
+ * @returns {Promise<Array<ErrorLog>>} List of errors
  */
-export async function getErrors(options?: ErrorFilterOptions): Promise<
-  Array<{
-    id: number;
-    message: string;
-    severity: string;
-    isResolved: boolean;
-    createdAt: Date;
-  }>
-> {
+export async function getErrors(options?: ErrorFilterOptions) {
+  const validatedOptions = options
+    ? errorFilterOptionsSchema.parse(options)
+    : undefined;
+
   try {
-    const {
-      severity,
-      resolved,
-      limit = 100,
-    } = errorFilterOptionsSchema.parse(options || {});
-
-    const where: {
-      severity?: string;
-      isResolved?: boolean;
-    } = {};
-    if (severity !== undefined) where.severity = severity;
-    if (resolved !== undefined) where.isResolved = resolved;
-
     const errors = await prisma.errorLog.findMany({
-      where,
+      where: {
+        severity: validatedOptions?.severity,
+        isResolved: validatedOptions?.resolved,
+      },
+      select: {
+        id: true,
+        message: true,
+        severity: true,
+        isResolved: true,
+        createdAt: true,
+      },
+      take: validatedOptions?.limit || 100,
       orderBy: {
         createdAt: "desc",
       },
-      take: limit,
     });
 
-    return errors.map(
-      (error: {
-        id: number;
-        message: string;
-        severity: string;
-        isResolved: boolean;
-        createdAt: Date;
-      }) => ({
-        id: error.id,
-        message: error.message,
-        severity: error.severity,
-        isResolved: error.isResolved,
-        createdAt: error.createdAt,
-      })
-    );
+    return errors;
   } catch (error) {
-    console.error(
-      "Failed to get errors:",
-      error instanceof Error ? error.message : String(error)
-    );
+    console.error("Failed to fetch errors:", error);
     return [];
   }
 }

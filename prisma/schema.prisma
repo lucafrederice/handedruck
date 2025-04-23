@@ -12,13 +12,13 @@ datasource db {
 
 model User {
   id                Int          @id @default(autoincrement())
-  firstName         String       @map("first_name")
-  lastName          String       @map("last_name")
+  firstName         String?      @map("first_name")
+  lastName          String?      @map("last_name")
   fiscalId          String?      @unique @map("fiscal_id")
   country           String?
   address           String?
   birthday          DateTime?    @db.Date
-  email             String       @unique
+  email             String?      @unique
   phone             String?      @unique @db.VarChar(20)
   creditScore       Int?         @map("credit_score")
   isAgent           Boolean      @default(true) @map("is_agent")

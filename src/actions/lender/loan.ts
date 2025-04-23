@@ -2,42 +2,45 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
+import { LoanStatus } from "../../types/loan";
+import { Decimal } from "@prisma/client/runtime/library";
 
-type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
+type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
-interface PrismaLoan {
+type Payment = {
+  id: number;
+  loanId: number;
+  amount: Decimal;
+  paymentDate: Date;
+  status: PaymentStatus;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type LoanWithRelations = {
   id: number;
   userId: number;
-  amount: number;
-  interestRate: number;
+  amount: Decimal;
+  interestRate: Decimal;
   termMonths: number;
   status: LoanStatus;
   approvedByUs: boolean;
   approvedByCustomer: boolean;
   startDate: Date | null;
   endDate: Date | null;
-  purpose?: string;
-  notes?: string;
+  purpose: string | null;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
   user: {
     id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
   };
-}
-
-interface PrismaPayment {
-  id: number;
-  loanId: number;
-  amount: number;
-  paymentDate: Date;
-  status: string;
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+  payments: Payment[];
+};
 
 // Get all loans with user info
 export async function getLoans() {
@@ -45,6 +48,7 @@ export async function getLoans() {
     const loans = await prisma.loan.findMany({
       include: {
         user: true,
+        payments: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -52,10 +56,14 @@ export async function getLoans() {
     });
 
     // Convert Decimal values to numbers
-    const formattedLoans = loans.map((loan: PrismaLoan) => ({
+    const formattedLoans = loans.map((loan: LoanWithRelations) => ({
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: Payment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     }));
 
     return { loans: formattedLoans };
@@ -89,7 +97,7 @@ export async function getLoan(id: number) {
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
-      payments: loan.payments.map((payment: PrismaPayment) => ({
+      payments: loan.payments.map((payment: Payment) => ({
         ...payment,
         amount: Number(payment.amount),
       })),

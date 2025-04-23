@@ -3,7 +3,36 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/db/prisma";
 import { getCurrentUser } from "@/actions/auth/getCurrentUser";
-import { Loan, Payment } from "@/types/loan";
+import type { Decimal } from "@prisma/client/runtime/library";
+
+interface PrismaLoan {
+  id: number;
+  userId: number;
+  amount: Decimal;
+  interestRate: Decimal;
+  termMonths: number;
+  status: "pending" | "active" | "paid" | "defaulted" | "cancelled";
+  approvedByUs: boolean;
+  approvedByCustomer: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  purpose: string | null;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  payments: PrismaPayment[];
+}
+
+interface PrismaPayment {
+  id: number;
+  loanId: number;
+  amount: Decimal;
+  paymentDate: Date;
+  status: "pending" | "completed" | "failed" | "cancelled";
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // Get all loans for the current user
 export async function getUserLoans() {
@@ -15,16 +44,27 @@ export async function getUserLoans() {
 
     const loans = await prisma.loan.findMany({
       where: { userId: user.id },
+      include: {
+        payments: {
+          orderBy: {
+            paymentDate: "desc",
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
 
     // Convert Decimal values to numbers
-    const formattedLoans = loans.map((loan: Loan) => ({
+    const formattedLoans = loans.map((loan: PrismaLoan) => ({
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: PrismaPayment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     }));
 
     return { loans: formattedLoans };
@@ -65,7 +105,7 @@ export async function getUserLoan(id: number) {
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
-      payments: loan.payments.map((payment: Payment) => ({
+      payments: loan.payments.map((payment: PrismaPayment) => ({
         ...payment,
         amount: Number(payment.amount),
       })),
@@ -103,6 +143,9 @@ export async function createLoanApplication(data: {
         status: "pending",
         approvedByCustomer: true, // Customer has approved by submitting the application
       },
+      include: {
+        payments: true,
+      },
     });
 
     // Convert Decimal values to numbers
@@ -110,6 +153,10 @@ export async function createLoanApplication(data: {
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: PrismaPayment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     };
 
     revalidatePath("/dashboard/b");
@@ -138,6 +185,9 @@ export async function approveLoan(id: number) {
         status: "active",
         startDate: new Date(),
       },
+      include: {
+        payments: true,
+      },
     });
 
     // Convert Decimal values to numbers
@@ -145,6 +195,10 @@ export async function approveLoan(id: number) {
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: PrismaPayment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     };
 
     revalidatePath(`/dashboard/b/loan/${id}`);
@@ -172,6 +226,9 @@ export async function declineLoan(id: number) {
       data: {
         status: "cancelled",
       },
+      include: {
+        payments: true,
+      },
     });
 
     // Convert Decimal values to numbers
@@ -179,6 +236,10 @@ export async function declineLoan(id: number) {
       ...loan,
       amount: Number(loan.amount),
       interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: PrismaPayment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     };
 
     revalidatePath(`/dashboard/b/loan/${id}`);

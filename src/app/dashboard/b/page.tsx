@@ -23,7 +23,35 @@ import {
 } from "@/components/ui/table";
 import { Plus, ArrowRight, AlertCircle } from "lucide-react";
 import { getUserLoans } from "@/actions/borrower/loan";
-import { Loan, LoanStatus } from "@/types/loan";
+
+type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
+
+type Loan = {
+  id: number;
+  userId: number;
+  amount: number;
+  interestRate: number;
+  termMonths: number;
+  status: LoanStatus;
+  approvedByUs: boolean;
+  approvedByCustomer: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  purpose: string | null;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  payments: {
+    id: number;
+    loanId: number;
+    amount: number;
+    paymentDate: Date;
+    status: "pending" | "completed" | "failed" | "cancelled";
+    notes: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+};
 
 export default async function MyLoansPage() {
   const { loans, error } = await getUserLoans();
@@ -32,6 +60,14 @@ export default async function MyLoansPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <p className="text-muted-foreground">{error}</p>
+      </div>
+    );
+  }
+
+  if (!loans) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <p className="text-muted-foreground">No loans found</p>
       </div>
     );
   }
