@@ -23,7 +23,7 @@ import PaymentForm from "@/components/payment-form";
 import { Badge } from "@/components/ui/badge";
 import { AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Alert } from "@/components/ui/alert";
-import { approveLoan, declineLoan } from "@/actions/borrower/loan";
+import { approveLoan, declineLoan } from "@/actions/lender/loan";
 
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
