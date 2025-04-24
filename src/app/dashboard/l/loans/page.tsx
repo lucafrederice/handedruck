@@ -2,7 +2,13 @@ import Link from "next/link";
 import { getLoans } from "@/actions/lender/loan";
 import { getBorrowers } from "@/actions/lender/borrower";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -11,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import { AlertCircle, ArrowRight, Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/loan-utils";
 import { DASH_L_LOANS_NEW_PATH } from "./new/path";
 import { DASH_L_LOANS_ID_PATH } from "./[id]/path";
@@ -59,6 +65,11 @@ export default async function LoansPage() {
   const { borrowers } = await getBorrowers();
   const hasBorrowers = borrowers && borrowers.length > 0;
 
+  // Separate pending loans that need approval
+  const pendingApproval = loans?.filter(
+    (loan: Loan) => loan.status === "pending" && !loan.approvedByUs
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between max-md:flex-col max-md:items-start gap-4">
@@ -76,6 +87,56 @@ export default async function LoansPage() {
           </Button>
         </Link>
       </div>
+
+      {pendingApproval && pendingApproval.length > 0 && (
+        <Card className="border-amber-200 dark:border-amber-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-amber-600 dark:text-amber-400">
+              <AlertCircle className="mr-2 h-5 w-5" />
+              Loans Pending Approval
+            </CardTitle>
+            <CardDescription>
+              The following loans have been asked by borrowers and require our
+              confirmation
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Loan ID</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Purpose</TableHead>
+                  <TableHead>Term</TableHead>
+                  <TableHead>Interest Rate</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pendingApproval.map((loan: Loan) => (
+                  <TableRow key={loan.id}>
+                    <TableCell className="font-medium">#{loan.id}</TableCell>
+                    <TableCell>{formatCurrency(loan.amount)}</TableCell>
+                    <TableCell>{loan.purpose}</TableCell>
+                    <TableCell>{loan.termMonths} months</TableCell>
+                    <TableCell>{loan.interestRate}%</TableCell>
+                    <TableCell>{formatDate(loan.createdAt)}</TableCell>
+                    <TableCell>
+                      <Link href={DASH_L_LOANS_ID_PATH(loan.id.toString())}>
+                        <Button size="sm">
+                          Review
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

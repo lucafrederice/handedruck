@@ -8,7 +8,7 @@ import {
 import { getLoan } from "@/actions/lender/loan";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import { DASH_L_LOANS_PATH } from "../path";
 import {
   formatCurrency,
@@ -21,6 +21,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PaymentForm from "@/components/payment-form";
 import { Badge } from "@/components/ui/badge";
+import { AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert } from "@/components/ui/alert";
+import { approveLoan, declineLoan } from "@/actions/borrower/loan";
 
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
@@ -66,6 +69,8 @@ export default async function LoanPage({ params }: PageProps) {
   const remainingBalance = calculateRemainingBalance(loan, payments);
   const paymentProgress = calculatePaymentProgress(loan, payments);
 
+  const needsApproval = loan.status === "pending" && !loan.approvedByUs;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -84,6 +89,47 @@ export default async function LoanPage({ params }: PageProps) {
           <p className="text-muted-foreground">View and manage loan details</p>
         </div>
       </div>
+
+      {needsApproval && (
+        <Alert className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+          <AlertTitle className="flex items-center text-amber-600 dark:text-amber-400">
+            This loan requires your approval
+          </AlertTitle>
+          <AlertDescription>
+            <p className="mb-4">
+              We&apos;ve approved your loan application. Please review the
+              details and confirm if you&apos;d like to proceed.
+            </p>
+            <div className="flex space-x-2">
+              <form
+                action={async () => {
+                  "use server";
+                  await approveLoan(loan.id);
+                }}
+              >
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Accept Loan
+                </Button>
+              </form>
+              <form
+                action={async () => {
+                  "use server";
+                  await declineLoan(loan.id);
+                }}
+              >
+                <Button
+                  variant="outline"
+                  className="border-red-300 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950"
+                >
+                  <XCircle className="mr-2 h-4 w-4" />
+                  Decline
+                </Button>
+              </form>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card>

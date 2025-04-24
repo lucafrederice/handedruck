@@ -8,6 +8,10 @@ import { sendLoanNotification } from "@/resend/sendLoanNotification";
 import { formatCurrency } from "@/lib/loan-utils";
 import { DASH_L_LOANS_PATH } from "@/app/dashboard/l/loans/path";
 import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
+import { getCurrentUser } from "../auth/getCurrentUser";
+import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
+import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
+
 type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
 
 type Payment = {
@@ -264,5 +268,89 @@ export async function deleteLoan(id: number) {
   } catch (error) {
     console.error(`Failed to delete loan ${id}:`, error);
     return { error: `Failed to delete loan ${id}` };
+  }
+}
+
+// Approve a loan
+export async function approveLoan(id: number) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    const loan = await prisma.loan.update({
+      where: {
+        id,
+        userId: user.id,
+      },
+      data: {
+        approvedByUs: true,
+        status: "active",
+        startDate: new Date(),
+      },
+      include: {
+        payments: true,
+      },
+    });
+
+    // Convert Decimal values to numbers
+    const formattedLoan = {
+      ...loan,
+      amount: Number(loan.amount),
+      interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: Payment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
+    };
+
+    revalidatePath(DASH_L_BORROWERS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_BORROWERS_PATH);
+    return { loan: formattedLoan };
+  } catch (error) {
+    console.error(`Failed to approve loan ${id}:`, error);
+    return { error: `Failed to approve loan ${id}` };
+  }
+}
+
+// Decline a loan
+export async function declineLoan(id: number) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    const loan = await prisma.loan.update({
+      where: {
+        id,
+        userId: user.id,
+      },
+      data: {
+        status: "cancelled",
+      },
+      include: {
+        payments: true,
+      },
+    });
+
+    // Convert Decimal values to numbers
+    const formattedLoan = {
+      ...loan,
+      amount: Number(loan.amount),
+      interestRate: Number(loan.interestRate),
+      payments: loan.payments.map((payment: Payment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
+    };
+
+    revalidatePath(DASH_L_BORROWERS_ID_PATH(id.toString()));
+    revalidatePath(DASH_L_BORROWERS_PATH);
+    return { loan: formattedLoan };
+  } catch (error) {
+    console.error(`Failed to decline loan ${id}:`, error);
+    return { error: `Failed to decline loan ${id}` };
   }
 }

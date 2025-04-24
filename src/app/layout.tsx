@@ -36,7 +36,7 @@ export default async function RootLayout({
           <div className="flex flex-col min-h-screen">
             <div className="flex-1">{children}</div>
             <footer className="w-full py-6 border-t border-gray-100 mx-auto max-w-7xl">
-              <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="container flex flex-col md:flex-row mx-auto justify-between items-center gap-4">
                 <p className="text-sm text-muted-foreground">
                   © {new Date().getFullYear()} Handedruck
                 </p>

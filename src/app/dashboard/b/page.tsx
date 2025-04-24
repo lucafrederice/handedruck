@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, ArrowRight, AlertCircle } from "lucide-react";
 import { getUserLoans } from "@/actions/borrower/loan";
+import { DASH_B_LOAN_PATH } from "./loan/[id]/path";
 
 type LoanStatus = "pending" | "active" | "paid" | "defaulted" | "cancelled";
 
@@ -139,7 +140,7 @@ export default async function MyLoansPage() {
                     <TableCell>{loan.interestRate}%</TableCell>
                     <TableCell>{formatDate(loan.createdAt)}</TableCell>
                     <TableCell>
-                      <Link href={`/dashboard/b/loan/${loan.id}`}>
+                      <Link href={DASH_B_LOAN_PATH(loan.id.toString())}>
                         <Button size="sm">
                           Review
                           <ArrowRight className="ml-2 h-4 w-4" />
@@ -195,7 +196,7 @@ export default async function MyLoansPage() {
                     </TableCell>
                     <TableCell>{formatDate(loan.startDate)}</TableCell>
                     <TableCell>
-                      <Link href={`/dashboard/b/loan/${loan.id}`}>
+                      <Link href={DASH_B_LOAN_PATH(loan.id.toString())}>
                         <Button variant="outline" size="sm">
                           View Details
                         </Button>
