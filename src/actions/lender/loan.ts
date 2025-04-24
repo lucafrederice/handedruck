@@ -282,7 +282,6 @@ export async function approveLoan(id: number) {
     const loan = await prisma.loan.update({
       where: {
         id,
-        userId: user.id,
       },
       data: {
         approvedByUs: true,
@@ -325,10 +324,10 @@ export async function declineLoan(id: number) {
     const loan = await prisma.loan.update({
       where: {
         id,
-        userId: user.id,
       },
       data: {
         status: "cancelled",
+        approvedByUs: false,
       },
       include: {
         payments: true,

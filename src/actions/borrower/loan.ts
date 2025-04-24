@@ -226,6 +226,7 @@ export async function declineLoan(id: number) {
       },
       data: {
         status: "cancelled",
+        approvedByCustomer: false,
       },
       include: {
         payments: true,
