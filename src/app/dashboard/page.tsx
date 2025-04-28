@@ -47,7 +47,7 @@ export default async function Page() {
 
   // If user is both agent and borrower, show the UI
   return (
-    <div className="min-h-screen flex justify-center p-4 mt-10">
+    <div className="min-h-screen flex justify-center p-4 max-md:mt-10">
       <DotBackgroundDemo>
         <div className="flex flex-col gap-20">
           <section className="w-full relative mx-auto text-center text-lg">

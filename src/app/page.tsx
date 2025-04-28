@@ -14,7 +14,7 @@ export default async function Page() {
       <main className="flex-1">
         <DotBackgroundDemo>
           <div className="flex flex-col gap-20">
-            <section className="w-full relative mx-auto text-center text-lg max-md:mt-10">
+            <section className="w-full relative mx-auto text-center text-lg mt-10">
               <div>🤝</div>
               <b> Handedruck</b>
             </section>
