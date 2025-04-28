@@ -18,6 +18,8 @@ const currentUserSchema = z.object({
   lastName: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  isAgent: z.boolean(),
+  isAdmin: z.boolean(),
 });
 
 type CurrentUser = z.infer<typeof currentUserSchema>;
