@@ -18,6 +18,25 @@ import {
 } from "../constants";
 import { succeedOrFailEmpty } from "../succeedOrFailEmpty";
 import { tryWithError } from "../tryWithError";
+import {
+  ConsoleSpanExporter,
+  BatchSpanProcessor,
+} from "@opentelemetry/sdk-trace-base";
+import { NodeSdk } from "@effect/opentelemetry";
+
+// Set up tracing with the OpenTelemetry SDK
+const NodeSdkLive = NodeSdk.layer(() => ({
+  resource: {
+    serviceName: "handedruck",
+    attributes: {
+      "handedruck.version": "1.0.0",
+      "handedruck.environment": process.env.NODE_ENV,
+      "handedruck.service": "handedruck",
+    },
+  },
+  // Export span data to the console
+  spanProcessor: new BatchSpanProcessor(new ConsoleSpanExporter()),
+}));
 
 /**
  * Retrieves the currently authenticated user based on their session token.
@@ -46,7 +65,9 @@ export const getCurrentUser = async () =>
     ).pipe(
       _.andThen((token) =>
         succeedOrFailEmpty({ token }, "Session token is empty")
-      )
+      ),
+      // add tracing
+      _.withSpan("getSessionToken")
     ),
     // verify session token
     _.andThen((token) =>
@@ -56,7 +77,9 @@ export const getCurrentUser = async () =>
       ).pipe(
         _.andThen((payload) =>
           succeedOrFailEmpty({ token, payload }, "Session payload is empty")
-        )
+        ),
+        // add tracing
+        _.withSpan("verifySessionToken")
       )
     ),
     // get user id from payload
@@ -67,7 +90,9 @@ export const getCurrentUser = async () =>
       ).pipe(
         _.andThen((userId) =>
           succeedOrFailEmpty({ token, userId }, "No user id from payload")
-        )
+        ),
+        // add tracing
+        _.withSpan("getUserIdFromJWTPayload")
       )
     ),
     // get valid session from token and user id
@@ -81,7 +106,9 @@ export const getCurrentUser = async () =>
             { userId, sessionId: session?.id },
             "No session id from token and user id"
           )
-        )
+        ),
+        // add tracing
+        _.withSpan("getValidSessionFromTokenAndUserId")
       )
     ),
     // update session last active
@@ -89,6 +116,9 @@ export const getCurrentUser = async () =>
       tryWithError(
         async () => await updateSessionLastActive(sessionId),
         SessionUpdateError
+      ).pipe(
+        // add tracing
+        _.withSpan("updateSessionLastActive")
       )
     ),
     // get user by id
@@ -100,7 +130,9 @@ export const getCurrentUser = async () =>
       ).pipe(
         _.andThen((user) =>
           succeedOrFailEmpty({ user }, "No user from user id")
-        )
+        ),
+        // add tracing
+        _.withSpan("getUserById")
       )
     ),
     // catch empty error
@@ -113,6 +145,10 @@ export const getCurrentUser = async () =>
       console.error(e);
       return _.succeed(null);
     }),
+    // greater span
+    _.withSpan("getCurrentUser"),
+    // Provide the tracing layer
+    _.provide(NodeSdkLive),
     // run the effect
     _.runPromise
   );

@@ -8,7 +8,7 @@ import { getCurrentUser } from "@/effect/auth/getCurrentUser";
 
 export default async function Page() {
   const user = await getCurrentUser();
-  console.log("user page", user);
+  // console.log("user page", user);
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-gray-50/50">
