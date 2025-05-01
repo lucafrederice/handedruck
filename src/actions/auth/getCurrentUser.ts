@@ -65,6 +65,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       where: {
         jwtToken: sessionToken,
         forceDeactivation: false,
+        userId: userId,
         expiresAt: {
           gt: new Date(),
         },

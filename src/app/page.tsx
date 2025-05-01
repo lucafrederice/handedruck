@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { getCurrentUser } from "@/actions/auth/getCurrentUser";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { DotBackgroundDemo } from "../components/dottedBg";
 import { UserCard } from "../components/UserCard";
 import { AUTH_REGISTER_PATH } from "./auth/register/path";
+import { getCurrentUser } from "@/effect/auth/getCurrentUser";
 
 export default async function Page() {
   const user = await getCurrentUser();
+  console.log("user page", user);
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-gray-50/50">

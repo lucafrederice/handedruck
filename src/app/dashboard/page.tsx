@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { DASH_L_PATH } from "./l/path";
 import { DotBackgroundDemo } from "@/components/dottedBg";
-import { getCurrentUser } from "@/actions/auth/getCurrentUser";
+import { getCurrentUser } from "@/effect/auth/getCurrentUser";
 import { DASH_B_PATH } from "./b/path";
 
 export default async function Page() {

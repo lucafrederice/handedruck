@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { AUTH_REGISTER_PATH } from "@/app/auth/register/path";
 import { DASHBOARD_PATH } from "@/app/dashboard/path";
 import { checkUserType } from "@/actions/checkUserType";
-import { getCurrentUser } from "@/actions/auth/getCurrentUser";
+import { getCurrentUser } from "@/effect/auth/getCurrentUser";
 import { Navbar } from "./components/Navbar";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { Home, Users, FileText, Landmark } from "lucide-react";

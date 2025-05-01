@@ -8,7 +8,7 @@ import { sendLoanNotification } from "@/resend/sendLoanNotification";
 import { formatCurrency } from "@/lib/loan-utils";
 import { DASH_L_LOANS_PATH } from "@/app/dashboard/l/loans/path";
 import { DASH_L_LOANS_ID_PATH } from "@/app/dashboard/l/loans/[id]/path";
-import { getCurrentUser } from "../auth/getCurrentUser";
+import { getCurrentUser } from "@/effect/auth/getCurrentUser";
 import { DASH_L_BORROWERS_ID_PATH } from "@/app/dashboard/l/borrowers/[id]/path";
 import { DASH_L_BORROWERS_PATH } from "@/app/dashboard/l/borrowers/path";
 
@@ -274,7 +274,7 @@ export async function deleteLoan(id: number) {
 // Approve a loan
 export async function approveLoan(id: number) {
   try {
-    const user = await getCurrentUser();
+    const user = await await getCurrentUser();
     if (!user) {
       return { error: "User not found" };
     }
