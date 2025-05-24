@@ -1,15 +1,10 @@
 # Note from the developer
-
-I've done this project since today's afternoon (04/22/25). I used a part of one of my side projects as the auth portion - and I did it because I am proud of the simple way I handled some complex concepts on it, _and I lost some time migrating it from drizzle-orm to prisma 😂_. Some of my highlights on this projects is:
-
 - a proposal for typesafety route paths
 - not only a generic application for lendings, but also with some ideas of how handle the process (like the loan needing to be approved before it is more than an loan application)
 - the way the application handle different types of users without creating more entities (if you are a person, that's what you are)
 - _Something else that I forgot. I got excited and opened the scope of this project a lot as you can see._
 
-Final Note: I really loved to create this project and played a lot with different things. Thank you for the great call and opportunity! I am looking forward to work with you guys!
-
-# Demo available on https://handedruck.vercel.app/
+**Demo available on https://handedruck.vercel.app/**
 
 # Screenshots
 <img width="1512" alt="Captura de Tela 2025-04-23 às 12 03 29" src="https://github.com/user-attachments/assets/8e77adf4-3cfb-4a33-b34d-288637065d2c" />
